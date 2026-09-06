@@ -1,0 +1,230 @@
+/* Print stylesheet for the CCDV-F study-note PDFs.
+   Every rule that affects wrapping exists to keep long table cells, code lines
+   and URLs from being clipped at the page edge. */
+
+@page {
+  size: A4;
+}
+
+html {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+body {
+  margin: 0;
+  font-family: "Noto Sans", "DejaVu Sans", Arimo, sans-serif;
+  /* Ligatures off so the PDF text layer extracts as plain ASCII, which keeps
+     copy/paste and text search over the printed file exact. */
+  font-variant-ligatures: none;
+  font-size: 10.2pt;
+  line-height: 1.45;
+  color: #14181f;
+  hyphens: none;
+  overflow-wrap: break-word;
+  orphans: 3;
+  widows: 3;
+}
+
+/* ---------- document (one per source .md file) ---------- */
+
+.doc + .doc {
+  break-before: page;
+}
+
+.doc-source {
+  margin: 0 0 1.1em;
+  padding-bottom: 0.35em;
+  border-bottom: 0.5pt solid #d7dbe0;
+  font-size: 8pt;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+/* ---------- headings ---------- */
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 1.15em 0 0.45em;
+  line-height: 1.25;
+  font-weight: 700;
+  color: #0b1220;
+  break-after: avoid;
+  break-inside: avoid;
+}
+
+h1 {
+  margin-top: 0;
+  padding-bottom: 0.25em;
+  border-bottom: 1pt solid #0b1220;
+  font-size: 19pt;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  margin-top: 1.5em;
+  padding-bottom: 0.18em;
+  border-bottom: 0.5pt solid #c8cdd4;
+  font-size: 14pt;
+}
+
+h3 { font-size: 11.8pt; }
+h4 { font-size: 10.6pt; }
+h5, h6 { font-size: 10.2pt; color: #374151; }
+
+/* ---------- text blocks ---------- */
+
+p, ul, ol, blockquote, table, pre {
+  margin: 0 0 0.7em;
+}
+
+ul, ol {
+  padding-left: 1.35em;
+}
+
+li {
+  margin-bottom: 0.22em;
+}
+
+li > ul, li > ol {
+  margin: 0.22em 0 0.3em;
+}
+
+blockquote {
+  padding: 0.1em 0 0.1em 0.85em;
+  border-left: 2.5pt solid #c8cdd4;
+  color: #374151;
+}
+
+hr {
+  height: 0;
+  margin: 1.2em 0;
+  border: 0;
+  border-top: 0.5pt solid #c8cdd4;
+}
+
+strong { font-weight: 700; color: #0b1220; }
+em { font-style: italic; }
+
+/* ---------- links ---------- */
+
+a {
+  color: #0b4fa8;
+  text-decoration: none;
+}
+
+/* Printed URL trailer emitted by the renderer for external links, so the
+   destination survives on paper where the hyperlink cannot be clicked. */
+.url-print {
+  font-size: 7.6pt;
+  color: #6b7280;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}
+
+/* ---------- code ---------- */
+
+code, pre, kbd, samp {
+  font-family: "JetBrains Mono", "Cascadia Mono", "DejaVu Sans Mono", "Noto Sans Mono", monospace;
+  font-variant-ligatures: none;
+}
+
+:not(pre) > code {
+  padding: 0.05em 0.25em;
+  border: 0.4pt solid #e2e5e9;
+  border-radius: 2px;
+  background: #f4f5f7;
+  font-size: 8.9pt;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+pre {
+  padding: 0.55em 0.7em;
+  border: 0.4pt solid #e2e5e9;
+  border-left: 2.5pt solid #b9c0c8;
+  border-radius: 2px;
+  background: #f7f8f9;
+  font-size: 8.6pt;
+  line-height: 1.38;
+  /* pre-wrap + anywhere: long lines wrap onto the next line instead of being
+     cut off by the right page margin. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  break-inside: avoid;
+}
+
+pre > code {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: inherit;
+  white-space: inherit;
+}
+
+/* ---------- tables ---------- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  /* auto layout lets Chrome size columns to content; fixed layout would clip */
+  table-layout: auto;
+  font-size: 8.8pt;
+  line-height: 1.34;
+}
+
+thead {
+  /* repeat the header row when a long table spans pages */
+  display: table-header-group;
+}
+
+th, td {
+  padding: 3.5pt 5pt;
+  border: 0.4pt solid #c3c9d0;
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+th {
+  background: #eef0f3;
+  font-weight: 700;
+  color: #0b1220;
+}
+
+tbody tr:nth-child(even) td {
+  background: #fafbfc;
+}
+
+td code, th code {
+  font-size: 8pt;
+}
+
+/* Rows are deliberately allowed to split across pages: several cells in these
+   notes hold multi-sentence text taller than the printable area, and forcing
+   avoid-break on them would push content off the page. */
+tr {
+  break-inside: auto;
+}
+
+/* ---------- pygments syntax highlighting ---------- */
+
+.hl-k, .hl-kd, .hl-kn, .hl-kr, .hl-kt { color: #7c3aed; font-weight: 600; }
+.hl-kc, .hl-kp { color: #7c3aed; }
+.hl-s, .hl-s1, .hl-s2, .hl-sb, .hl-sc, .hl-sd, .hl-se, .hl-sh, .hl-si, .hl-sx, .hl-sr, .hl-ss, .hl-dl { color: #0a7b46; }
+.hl-c, .hl-c1, .hl-cm, .hl-cs, .hl-cp, .hl-cpf, .hl-ch { color: #6b7280; font-style: italic; }
+.hl-m, .hl-mi, .hl-mf, .hl-mh, .hl-mo, .hl-mb { color: #b45309; }
+.hl-n, .hl-nx { color: #14181f; }
+.hl-nb, .hl-bp { color: #0b4fa8; }
+.hl-nf, .hl-fm { color: #1d4ed8; }
+.hl-nc, .hl-nn, .hl-ne { color: #b45309; font-weight: 600; }
+.hl-nt { color: #7c3aed; }
+.hl-na { color: #0a7b46; }
+.hl-nd, .hl-nl, .hl-nv, .hl-vc, .hl-vg, .hl-vi { color: #14181f; }
+.hl-o, .hl-ow, .hl-p { color: #374151; }
+.hl-gd { color: #b3261e; }
+.hl-gi { color: #0a7b46; }
+.hl-ge { font-style: italic; }
+.hl-gs { font-weight: 700; }
+.hl-err { color: #b3261e; }
