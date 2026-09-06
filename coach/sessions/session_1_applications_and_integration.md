@@ -110,12 +110,12 @@ D. The team should have deployed to every candidate platform and let the reviewe
 
 ### Q4
 
-Why is the operate phase of a Claude application never "done" in the way it can be for traditional software with a fixed spec?
+Which sequence matches the systems lifecycle phases a Claude application moves through?
 
-A. Model behavior can shift on a version bump and prompt effectiveness drifts as usage patterns change, with no code change involved
-B. Claude applications are always deployed as beta software under Anthropic's terms
-C. The Messages API changes its request schema on a fixed monthly cadence
-D. Token pricing changes force a rewrite of the application logic each time
+A. Requirements → design → build → test → deploy → operate → iterate
+B. Design → requirements → build → deploy → test → iterate → operate
+C. Requirements → build → test → design → deploy → operate → iterate
+D. Build → test → requirements → design → deploy → iterate → operate
 
 ### Q5
 
@@ -252,12 +252,12 @@ D. Pinning stopped being necessary from 4.6 onward because behavior is now guara
 
 #### Q4 — Answer: A
 
-- **Why A is correct:** This is the property specific to Claude applications: quality can move because the model version moved or because usage drifted away from what the prompt was tuned for, with the codebase untouched. That's why eval suites are built during the build phase and used as the deploy gate.
-- **Why not B:** Deployment status has nothing to do with it.
-- **Why not C:** There is no such fixed schema-change cadence.
-- **Why not D:** Pricing changes affect cost models, not application correctness.
-- **Difficulty:** Medium
-- **Tag:** `apps.lifecycle/operate-phase`
+- **Why A is correct:** The seven phases run requirements, design, build, test, deploy, operate, iterate — with model-specific work mapped onto each, and a gate at every transition. Knowing the order is what lets you say a decision was made in the wrong phase, which is why discovering a residency constraint at the deploy gate is expensive.
+- **Why not B:** Design can't precede requirements, and testing after deployment inverts the gate that protects production.
+- **Why not C:** Design sits before build, not after testing.
+- **Why not D:** Building before requirements exist is the mistake the phase order exists to prevent.
+- **Difficulty:** Easy
+- **Tag:** `apps.lifecycle/phases`
 - **Revise:** `2_applications_and_integration.md` → Systems Life Cycle
 
 #### Q5 — Answer: D
