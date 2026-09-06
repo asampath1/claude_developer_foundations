@@ -19,6 +19,19 @@ Content was generated using WebSearch/WebFetch (in place of the Exa SDK — see 
 | [study_practice_questions.md](study_practice_questions.md) | 58 original practice questions with explanations |
 | [study_topic_summaries.md](study_topic_summaries.md) | Topic summaries for final review |
 
+## Printable PDFs
+
+[`pdf/`](pdf/) holds a print-ready A4 PDF of every file above, plus [`pdf/CCDV-F_complete_study_notes.pdf`](pdf/CCDV-F_complete_study_notes.pdf) — all eleven documents in study order as one booklet. Every PDF carries page numbers, repeats table headers across page breaks, wraps long code lines and table cells so nothing is clipped at the margin, and prints the destination of each external link next to the link text so the URLs survive on paper.
+
+Regenerate after editing any note (needs Google Chrome or Chromium on `PATH`):
+
+```bash
+pip install -r tools/requirements.txt
+python3 tools/md_to_pdf.py
+```
+
+The script renders Markdown locally with markdown-it-py, prints through Chrome's DevTools Protocol, then verifies the result: it extracts the text layer of each PDF and checks every non-blank source line (table cells individually) against it, so a rendering change that silently drops content fails the run instead of shipping.
+
 ## Exam domains
 
 | Domain | Weight |
