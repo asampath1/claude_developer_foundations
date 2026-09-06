@@ -112,7 +112,7 @@ Anchors are the specific facts each exam owns. Every anchor traces to a section 
 
 **Exam 3** — context engineering as the superset of prompt engineering; subagents as a context-isolation technique; few-shot fixing an invented structure; strict tool use protecting an agentic loop from malformed arguments; the 40K-cap incident whose symptom looked like tool-selection failure.
 
-**Exam 4** — persistent rules belonging in CLAUDE.md because compaction can drop early instructions; tool-output pruning as the lossless, LLM-free option; when stacking all four techniques is over-engineering; the system prompt as the whole-session behavioral contract; the token cost of structured outputs and why a prompt-only instruction slips; skepticism toward fluent, confident output.
+**Exam 4** — persistent rules belonging in CLAUDE.md because compaction can drop early instructions; tool-output pruning as the lossless, LLM-free option; when stacking all four prompting techniques is over-engineering; the system prompt as the whole-session behavioral contract; the token cost of structured outputs and why a prompt-only instruction slips; skepticism toward fluent, confident output.
 
 ### Tools and MCP
 
