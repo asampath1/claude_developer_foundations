@@ -117,12 +117,12 @@ D. Orchestrator-workers, extended into voting
 
 ### Q5
 
-In the Agent SDK's execution loop, what counts as one **turn**?
+Assuming no `max_turns` or `max_budget_usd` limit is reached, what ends the Agent SDK's loop?
 
-A. One full cycle of Claude responding and the SDK executing any requested tools and feeding the results back
-B. One user message, regardless of how many tool calls it triggers
-C. One tool execution
-D. One complete session, from init through `ResultMessage`
+A. Claude produces a response containing no tool calls, after which the SDK emits a final `AssistantMessage` and then a `ResultMessage`
+B. Nothing — the loop runs until a limit is hit, which is why `max_turns` is mandatory
+C. Every registered tool has been called at least once
+D. The harness sends an explicit stop signal after each tool result is returned
 
 ### Q6
 
@@ -242,10 +242,10 @@ D. Nothing returns to the parent; the subagent writes its findings to disk for t
 
 #### Q5 — Answer: A
 
-- **Why A is correct:** A turn is one full cycle of the loop: Claude responds, the SDK executes any requested tools and feeds results back. The cycle repeats until Claude returns a response with no tool calls.
-- **Why not B:** A single user message can drive many turns.
-- **Why not C:** One turn can contain several tool executions, including parallel ones.
-- **Why not D:** A session is many turns.
+- **Why A is correct:** Steps 2 and 3 of the loop — respond, execute tools, feed results back — cycle until Claude returns a response with no tool calls. The SDK then returns a final `AssistantMessage` followed by a `ResultMessage` carrying text, token usage, cost, and session ID.
+- **Why not B:** `max_turns` and `max_budget_usd` are optional safety caps against runaway sessions, not the normal exit condition.
+- **Why not C:** Nothing requires every registered tool to be used; Claude calls a tool only when the request maps to it.
+- **Why not D:** The SDK feeds tool results back automatically and continues the cycle without an external stop signal.
 - **Difficulty:** Easy
 - **Tag:** `agents.construction/agent-loop`
 - **Revise:** `1_agents_and_workflows.md` → The Claude Agent SDK and the agent loop

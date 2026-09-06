@@ -173,12 +173,12 @@ D. Irrelevant, since per-token pricing is broadly aligned across tiers
 
 ### Q11
 
-An agent's workload is dominated by file lookups and directory listings. Which `effort` level fits, and why?
+Reasoning depth on adaptive-thinking models is tuned with `effort`. Which description matches the documented levels?
 
-A. `low` — minimal reasoning is appropriate for lookups and listing, and reasoning depth is wasted on tasks with no multi-step analysis
-B. `max` — deeper reasoning improves every task, including retrieval
-C. `high` — the safe default for any agentic workload regardless of task shape
-D. Effort levels don't apply to agents, only to single API calls
+A. Five levels — `low` for lookups and listing, `medium` for routine edits, `high` for thorough analysis such as refactors and debugging, `xhigh` for extended depth on complex coding, `max` for multi-step problems needing the deepest analysis
+B. Three levels — `off`, `on`, and `max` — with `on` as the universal default
+C. A numeric scale from 1 to 5, each level mapping to a fixed reasoning token budget
+D. A single boolean flag, since depth is decided entirely by the model on adaptive-thinking tiers
 
 ### Q12
 
@@ -313,10 +313,10 @@ D. Usage data isn't available per request, so cost can only be reconciled from t
 
 #### Q11 — Answer: A
 
-- **Why A is correct:** `low` is the level described for file lookups and listing. Reasoning earns its cost on hard multi-step problems and is wasted on lookups and classification.
-- **Why not B:** `max` spends the most reasoning on a task with nothing to reason about.
-- **Why not C:** `high` is for thorough analysis such as refactors and debugging, not retrieval.
-- **Why not D:** `effort` is an Agent SDK setting and the same concept applies at the raw API level.
+- **Why A is correct:** Those are the five documented levels and their intended uses, from `low` for lookups through `max` for the deepest multi-step analysis. Reasoning earns its cost on hard problems and is wasted on lookups and classification.
+- **Why not B:** There's no on/off effort switch; adaptive thinking is always the mode on those tiers, with `effort` tuning depth.
+- **Why not C:** Numeric reasoning budgets are the deprecated `budget_tokens` model, which returns a 400 on the newest generations.
+- **Why not D:** The model does decide when and how much to think, but `effort` is the setting that tunes it — and its default varies by model and surface.
 - **Difficulty:** Medium
 - **Tag:** `mso.model-choice/effort-levels`
 - **Revise:** `4_model_selection_prompting_context.md` → Model Selection and Tradeoffs
