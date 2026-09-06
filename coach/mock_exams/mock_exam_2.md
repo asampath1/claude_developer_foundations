@@ -36,55 +36,55 @@ Sit this one after all eight coaching sessions. It's the first honest full-bluep
 
 A logistics customer describes the problem this way: "our dispatchers lose about twenty minutes a shift reading driver check-in messages one at a time — we want Claude to summarize them." That's the whole brief. Which set of questions derives the *infrastructure* requirements from it?
 
-A. Which summarization prompt scores best, how many few-shot examples the summary format needs, and whether XML tags are required to delimit the check-in text
-B. Which model tier to start on, which `effort` level to set, and which cache TTL the prefix should use
-C. How fast a summary must come back and measured from where the dispatchers actually sit; how many check-ins arrive at peak; where the message data may be processed and under which regulation; whose credentials the system acts under and what has to be auditable
-D. Whether dispatchers prefer bullets or prose, how long a summary should run, and whether the tone should be formal
+- **A.** Which summarization prompt scores best on a held-out sample, how many few-shot examples the output format needs, and whether XML tags should delimit each check-in
+- **B.** Which model tier to start on, which `effort` level the summaries justify, which cache TTL the shared prefix should use, and how token cost per shift is tracked
+- **C.** How fast a summary must return and measured from where dispatchers sit; how many arrive at peak; where the data may be processed and under which regulation; whose credentials the system acts under
+- **D.** Whether dispatchers prefer bullets or prose, how long a summary should run, whether it should name the driver, and whether the tone should stay formal
 
 ### Q2
 
 An agent request is assembled from a system prompt, twelve prior conversation turns, six tool definitions, three tool results returned by the previous turn, and Claude's own reply. Which of these draw on the same context-window budget?
 
-A. Only the system prompt and the conversation history — tool definitions and tool results are metered separately
-B. All of them, including the tool definitions, the tool results, and the model's own output
-C. Everything except the model's output, which is billed but does not occupy the window
-D. Only content inside `messages`; `system` and `tools` sit outside the window
+- **A.** Only the system prompt and the conversation history — tool definitions and tool results are metered separately
+- **B.** All of them, including the tool definitions, the tool results, and the model's own output
+- **C.** Everything except the model's output, which is billed but does not occupy the window
+- **D.** Only content inside `messages`; `system` and `tools` sit outside the window
 
 ### Q3
 
 A team is building an internal research assistant and genuinely cannot tell yet whether the steps will turn out predictable enough to hard-code. What does Anthropic's guidance tell them to do?
 
-A. Build a workflow first, since predictability is always the safer default
-B. Build both and A/B them against live traffic
-C. Go straight to orchestrator-workers, which covers both the predictable and unpredictable cases
-D. Start with an agent, then extract deterministic workflow patterns as they emerge from real usage
+- **A.** Build a workflow first, since predictability is always the safer default
+- **B.** Build both and A/B them against live traffic
+- **C.** Go straight to orchestrator-workers, which covers both the predictable and unpredictable cases
+- **D.** Start with an agent, then extract deterministic workflow patterns as they emerge from real usage
 
 ### Q4
 
 Why does the operate phase of a Claude application never reach "done" the way it can for traditional software with a fixed spec?
 
-A. Model behavior can shift on a version bump and prompt effectiveness drifts as usage patterns evolve, so quality can move with no code change at all
-B. Anthropic requires deployed applications to be re-certified each quarter
-C. The Messages API is stateless, so conversation state has to be rebuilt on every request
-D. Eval suites are constructed during the operate phase, and an eval suite is never finished
+- **A.** Model behavior can shift on a version bump and prompt effectiveness drifts as usage patterns evolve, so quality can move with no code change at all
+- **B.** Anthropic requires deployed applications to be re-certified each quarter
+- **C.** The Messages API is stateless, so conversation state has to be rebuilt on every request
+- **D.** Eval suites are constructed during the operate phase, and an eval suite is never finished
 
 ### Q5
 
 A planning agent's context has grown to the point where the next call will not fit. Inspecting the transcript, the bulk of it is twelve turns of dialogue and intermediate reasoning about a design decision — the tool outputs were already small. The team needs to shrink the session without losing the decisions already made. What does compaction give here that pruning cannot, and what should be wired up alongside it?
 
-A. Compaction summarizes the non-recoverable dialogue and reasoning into a condensed form via an LLM call, keeping recent exchanges and key decisions intact — and a `PreCompact` hook can archive the full transcript before it is summarized away
-B. Pruning does the same job here at lower cost, because anything cleared can simply be re-fetched by re-calling the tool
-C. Compaction is lossless and requires no model call, and a `PostToolUse` hook is the right place to archive the transcript
-D. Compaction raises the session's context-window ceiling for the remainder of the run, so no archiving step is involved
+- **A.** Compaction summarizes the non-recoverable dialogue and reasoning via an LLM call, keeping recent exchanges and key decisions — and a `PreCompact` hook can archive the full transcript first
+- **B.** Pruning does the same job at lower cost, because the agent can re-fetch anything cleared by re-calling the tool that produced it
+- **C.** Compaction is lossless and needs no model call, and a `PostToolUse` hook is the right place to archive the transcript before it is condensed
+- **D.** Compaction raises the session's context-window ceiling for the rest of the run, so nothing is lost and no archiving step is involved
 
 ### Q6
 
 A developer registers two tools directly in the request's `tools` array and also connects an MCP server whose third tool arrives through the `ListToolsRequest` handshake. From Claude's perspective, how does the MCP-discovered tool differ from the two registered by hand?
 
-A. MCP tools are invoked through a separate endpoint and do not produce `tool_use` blocks
-B. MCP tools are exempt from the `tool_result` pairing rule, because the server returns results directly to the model
-C. It doesn't differ — same description-based routing, same message-block pairing rules; only who wrote and owns the definition changes
-D. MCP tools are always evaluated after locally registered ones, so a name collision resolves in favor of the local tool
+- **A.** MCP tools are invoked through a separate endpoint and do not produce `tool_use` blocks
+- **B.** MCP tools are exempt from the `tool_result` pairing rule, because the server returns results directly to the model
+- **C.** It doesn't differ — same description-based routing, same message-block pairing rules; only who wrote and owns the definition changes
+- **D.** MCP tools are always evaluated after locally registered ones, so a name collision resolves in favor of the local tool
 
 ### Q7
 
@@ -96,397 +96,397 @@ An engineer needs Claude to read a 40-page contract that will be sent once, inli
 
 Which corrected block matches how PDFs are actually supplied?
 
-A. Keep `type: "image"` and the `application/pdf` media type, but replace `name` with `title`
-B. Use `type: "document"` with a `source` of `{"type": "text", "data": "<extracted-text>"}`, extracting the text yourself before the call
-C. Use `type: "document"` and supply the bytes under a required `name` field instead of a `source` object
-D. Switch the block to `type: "document"`, keep the same `base64` source with the `application/pdf` media type, and drop `name` in favor of the optional `title` field
+- **A.** Keep `type: "image"` and the `application/pdf` media type, but replace `name` with `title`
+- **B.** Use `type: "document"` with a `source` of `{"type": "text", "data": "<extracted-text>"}`, extracting the text yourself before the call
+- **C.** Use `type: "document"` and supply the bytes under a required `name` field instead of a `source` object
+- **D.** Switch the block to `type: "document"`, keep the same `base64` source with the `application/pdf` media type, and drop `name` in favor of the optional `title` field
 
 ### Q8
 
 A team ports a classification service from an older pinned model to Sonnet 5. They keep `temperature: 0` in the request body, which is what had been holding label casing stable. Every call now returns 400. What happened, and what is the fix?
 
-A. `temperature` must be sent as a string rather than a number on the newest models
-B. The newest models (Fable 5, Opus 5, Sonnet 5) do not accept non-default sampling parameters — `temperature`, `top_p`, and `top_k` all return 400 — so remove them and steer the output through prompting instead
-C. `temperature: 0` is the single unsupported value; any value above zero is accepted
-D. A 400 on a previously working request is the rate-limit signal on the newest models; back off and retry
+- **A.** `temperature` must be sent as a string rather than a number on the newest models
+- **B.** The newest models (Fable 5, Opus 5, Sonnet 5) do not accept non-default sampling parameters — `temperature`, `top_p`, and `top_k` all return 400 — so remove them and steer the output through prompting instead
+- **C.** `temperature: 0` is the single unsupported value; any value above zero is accepted
+- **D.** A 400 on a previously working request is the rate-limit signal on the newest models; back off and retry
 
 ### Q9
 
 An internal-only agent fetches supplier pages a user names and summarizes them. The team documented a decision not to validate fetched page content: "every user is an authenticated employee, the risk is the user, and we trust our own people." A summary is later written to a path nobody configured, traced to a line buried in one of the fetched pages. Why did the original reasoning not address prompt injection, and what is the fix?
 
-A. It did address it — an authenticated, internal-only user base removes the injection vector, so this must be a separate bug
-B. It failed only because employees can be phished; the fix is SSO plus MFA in front of the agent's entry point
-C. The hostile instruction arrived through content the agent retrieved on the user's behalf rather than through the user's own prompt — so the fix is two-sided: treat fetched content as data, and put a hook in front of the write tool that refuses actions triggered by untrusted input
-D. It failed because internal users can jailbreak the model too; the fix is a system-prompt line telling Claude to ignore any instruction found inside a fetched page
+- **A.** It did address it — an authenticated, internal-only user base removes the injection vector, so this must be a separate bug
+- **B.** It failed only because employees can be phished; the fix is SSO plus MFA in front of the agent's entry point
+- **C.** The hostile instruction arrived through content the agent retrieved on the user's behalf rather than through the user's own prompt — so the fix is two-sided: treat fetched content as data, and put a hook in front of the write tool that refuses actions triggered by untrusted input
+- **D.** It failed because internal users can jailbreak the model too; the fix is a system-prompt line telling Claude to ignore any instruction found inside a fetched page
 
 ### Q10
 
 A monitoring pipeline attaches four dashboard screenshots to each request. Each screenshot is 1,400 × 840 pixels, within the tier's native resolution limits so no downscaling applies. Using the visual-token formula, roughly how many visual tokens do the four images consume per request?
 
-A. ~6,000
-B. ~1,500
-C. ~1,296
-D. ~42,000
+- **A.** ~6,000
+- **B.** ~1,500
+- **C.** ~1,296
+- **D.** ~42,000
 
 ### Q11
 
 A marketing team already scores generated copy against a written rubric they use in review, and they've confirmed that a second pass against that rubric measurably improves the draft. Which named workflow pattern fits?
 
-A. Prompt chaining
-B. Routing
-C. Parallelization by voting
-D. Evaluator-optimizer
+- **A.** Prompt chaining
+- **B.** Routing
+- **C.** Parallelization by voting
+- **D.** Evaluator-optimizer
 
 ### Q12
 
 An 847-line CLAUDE.md contains a correctly worded restriction against touching `/legacy/tokens/`. The agent edited a file there anyway. A grep confirms the line is present, unambiguous, and spelled correctly. What is the diagnosis, and the fix?
 
-A. The restriction needs to appear at both the top and the bottom of the file so it gets read twice
-B. Size is CLAUDE.md's main failure mode — a larger file makes any single instruction a smaller fraction of what loads, so 846 other lines diluted the rule; trim CLAUDE.md to constraints that actually change behavior and move historical or reference content elsewhere
-C. CLAUDE.md only loads when a file matching its `paths` frontmatter is touched, and no glob matched `/legacy/tokens/`
-D. CLAUDE.md is advisory in every permission mode, so the only durable fix is to run the session under `bypassPermissions` with deny rules instead
+- **A.** The restriction needs to appear at both the top and the bottom of the file so it gets read twice
+- **B.** Size is CLAUDE.md's main failure mode — a larger file makes any single instruction a smaller fraction of what loads, so 846 other lines diluted the rule; trim CLAUDE.md to constraints that actually change behavior and move historical or reference content elsewhere
+- **C.** CLAUDE.md only loads when a file matching its `paths` frontmatter is touched, and no glob matched `/legacy/tokens/`
+- **D.** CLAUDE.md is advisory in every permission mode, so the only durable fix is to run the session under `bypassPermissions` with deny rules instead
 
 ### Q13
 
 A team plans to upload a set of reference images once through the Files API and reference them by `file_id` on every subsequent request. The deployment target is Claude in Amazon Bedrock. What blocks the plan?
 
-A. The Files API is currently beta and is not available on Bedrock or Vertex AI — confirm availability for your deployment platform
-B. Bedrock accepts `file_id` references for PDFs only, not for images
-C. `file_id` references require the `mcp-client-2025-11-20` beta header, which this deployment does not set
-D. Nothing blocks it — the Files API behaves identically across all six deployment platforms
+- **A.** The Files API is currently beta and is not available on Bedrock or Vertex AI — confirm availability for your deployment platform
+- **B.** Bedrock accepts `file_id` references for PDFs only, not for images
+- **C.** `file_id` references require the `mcp-client-2025-11-20` beta header, which this deployment does not set
+- **D.** Nothing blocks it — the Files API behaves identically across all six deployment platforms
 
 ### Q14
 
 An extraction prompt was validated against 30 sample invoices and is clean on every one of them. In production it fails on invoices where the total amount appears twice — once as a subtotal partway down the page — picking the wrong one. The prompt names the exact output fields, the response parses as valid JSON every time, and the tone and scope are correct. Which technique is missing?
 
-A. A system prompt, or a more specific one
-B. Few-shot examples showing the structure Claude keeps inventing
-C. A constraint covering that variant — the prompt was validated against a narrow input set with no rule for the case that breaks it
-D. An output constraint naming the form, field names, and stopping point
+- **A.** A system prompt, or a more specific one
+- **B.** Few-shot examples showing the structure Claude keeps inventing
+- **C.** A constraint covering that variant — the prompt was validated against a narrow input set with no rule for the case that breaks it
+- **D.** An output constraint naming the form, field names, and stopping point
 
 ### Q15
 
 A long-running summarizer starts returning replies that end mid-sentence. The response carries HTTP 200 and `stop_reason: "model_context_window_exceeded"`, with nothing in the error logs. A junior engineer proposes wrapping the call in a retry with exponential backoff. What actually happened, and why is the retry the wrong response?
 
-A. The request was rejected with a validation error before generation started because the input exceeded the window; a retry of the identical request fails identically
-B. The input fit, but generation itself hit the ceiling mid-response, so the model stopped and returned partial output instead of erroring — an identical retry reproduces it, and the application has to trim or summarize history before the call
-C. This is a rate limit surfacing under a different stop reason; honoring `retry-after` resolves it
-D. The output limit was reached, so raising `max_tokens` fixes it
+- **A.** The request was rejected with a validation error before generation started because the input exceeded the window; a retry of the identical request fails identically
+- **B.** The input fit, but generation itself hit the ceiling mid-response, so the model stopped and returned partial output instead of erroring — an identical retry reproduces it, and the application has to trim or summarize history before the call
+- **C.** This is a rate limit surfacing under a different stop reason; honoring `retry-after` resolves it
+- **D.** The output limit was reached, so raising `max_tokens` fixes it
 
 ### Q16
 
 At the API-mechanics level, which statement correctly separates extended thinking from adaptive thinking?
 
-A. Both are enabled with `thinking.type: "enabled"`; only the token accounting differs between them
-B. Adaptive thinking produces explicit `thinking` content blocks, while extended thinking is invisible to the caller
-C. Both mechanisms apply to every current model, and the choice is made per request
-D. Adaptive thinking (Fable 5, Opus 5, Sonnet 5) lets the model decide depth, tuned by `effort`; extended thinking (`thinking.type: "enabled"`, currently Haiku 4.5) produces explicit `thinking` content blocks — and on the newest models thinking content is omitted from the response by default
+- **A.** Both are enabled with `thinking.type: "enabled"`; only the token accounting differs between them
+- **B.** Adaptive thinking produces explicit `thinking` content blocks, while extended thinking is invisible to the caller
+- **C.** Both mechanisms apply to every current model, and the choice is made per request
+- **D.** Adaptive thinking (Fable 5, Opus 5, Sonnet 5) lets the model decide depth, tuned by `effort`; extended thinking (`thinking.type: "enabled"`, currently Haiku 4.5) produces explicit `thinking` content blocks — and on the newest models thinking content is omitted from the response by default
 
 ### Q17
 
 An MCP server backs an internal support console. Every turn should begin with the current on-call rota already in context; the rota lives at a single fixed address, and the team would rather not spend a tool round-trip fetching it. Which server primitive fits, and what caveat applies?
 
-A. A resource — read-only data fetched by address and placed directly into context with no tool call; note that support for resources varies by client, so verify before relying on it
-B. A tool annotated with `readOnlyHint`, since read-only tools execute concurrently
-C. A prompt, since the rota is fixed wording that should be maintained in one place on the server
-D. A tool with `defer_loading` turned off, so its definition loads upfront rather than on demand
+- **A.** A resource — read-only data fetched by address and placed directly into context with no tool call; note that support for resources varies by client, so verify before relying on it
+- **B.** A tool annotated with `readOnlyHint`, since read-only tools execute concurrently
+- **C.** A prompt, since the rota is fixed wording that should be maintained in one place on the server
+- **D.** A tool with `defer_loading` turned off, so its definition loads upfront rather than on demand
 
 ### Q18
 
 In the multi-agent structure the material calls the most common and best-supported, what does the central component actually do?
 
-A. Executes each subtask itself and delegates only once it runs out of context
-B. Splits the work into a fixed number of equal shards decided before the request arrives
-C. Receives the request, maintains a list of worker agents, delegates tasks, and reviews and aggregates their output — typically without executing the work itself
-D. Operates as a peer among equals, with any agent free to take the coordination role on a given turn
+- **A.** Executes each subtask itself and delegates only once it runs out of context
+- **B.** Splits the work into a fixed number of equal shards decided before the request arrives
+- **C.** Receives the request, maintains a list of worker agents, delegates tasks, and reviews and aggregates their output — typically without executing the work itself
+- **D.** Operates as a peer among equals, with any agent free to take the coordination role on a given turn
 
 ### Q19
 
 What are the size limits on a single Message Batches API submission?
 
-A. 10,000 requests or 32MB, whichever limit hits first
-B. 100,000 requests, with no payload size limit
-C. 256 requests per batch, submitted up to 100,000 times per day
-D. 100,000 requests or 256MB, whichever limit hits first
+- **A.** 10,000 requests or 32MB, whichever limit hits first
+- **B.** 100,000 requests, with no payload size limit
+- **C.** 256 requests per batch, submitted up to 100,000 times per day
+- **D.** 100,000 requests or 256MB, whichever limit hits first
 
 ### Q20
 
 A ticket-tagging feature runs zero-shot on Sonnet 5 and clears its eval bar. A cost review asks whether Haiku 4.5 could carry the same work. Run zero-shot on Haiku 4.5, the feature misses the bar: inconsistent label casing and one edge category tagged wrong. What is the reasonable next step?
 
-A. Stay on Sonnet 5 — a tier that misses the bar zero-shot cannot be brought up to it
-B. Add few-shot examples to the Haiku 4.5 prompt and re-run the eval: a more capable model often succeeds zero-shot where a smaller one needs examples, so examples can let a cheaper tier do the job — weighed against the tokens each example costs on every call
-C. Turn on adaptive thinking for Haiku 4.5 with a higher `effort` level, closing the capability gap without touching the prompt
-D. Send the examples once so the model retains them for later calls, since examples act as training data and then cost nothing per request
+- **A.** Stay on Sonnet 5 — a tier that misses the bar zero-shot cannot be brought up to it
+- **B.** Add few-shot examples to the Haiku 4.5 prompt and re-run the eval: a more capable model often succeeds zero-shot where a smaller one needs examples, so examples can let a cheaper tier do the job — weighed against the tokens each example costs on every call
+- **C.** Turn on adaptive thinking for Haiku 4.5 with a higher `effort` level, closing the capability gap without touching the prompt
+- **D.** Send the examples once so the model retains them for later calls, since examples act as training data and then cost nothing per request
 
 ### Q21
 
 A tool call matches one deny rule, two allow rules, and an ask rule. What happens?
 
-A. It is blocked — precedence is deny > ask > allow, and a single deny blocks the action regardless of how many allow rules also match
-B. It prompts for confirmation, because ask outranks both deny and allow
-C. It is allowed, because two allow rules outweigh one deny
-D. The most specific rule wins regardless of its type, so the outcome depends on which rule targets the narrowest path
+- **A.** It is blocked — precedence is deny > ask > allow, and a single deny blocks the action regardless of how many allow rules also match
+- **B.** It prompts for confirmation, because ask outranks both deny and allow
+- **C.** It is allowed, because two allow rules outweigh one deny
+- **D.** The most specific rule wins regardless of its type, so the outcome depends on which rule targets the narrowest path
 
 ### Q22
 
 A European customer already runs Microsoft Foundry across their organization and asks to keep the Claude workload there. Their stated requirement is EU regional residency. The engineering lead reports back: "Foundry is on our approved platform list and the customer is an EU tenant, so residency is satisfied — we can proceed to build." What is wrong with that conclusion?
 
-A. Nothing — a platform's residency posture applies uniformly to every model it offers
-B. Foundry cannot serve EU residency requirements at all; EU residency requires Bedrock or Vertex AI
-C. Foundry satisfies the requirement only once the full model ID is pinned with the `anthropic.` prefix
-D. Foundry offers Claude in two hosting forms with different residency properties — "Hosted on Azure" (currently Opus 4.8, Sonnet 5, Haiku 4.5, inference end-to-end on Azure infrastructure) and "Hosted on Anthropic" (all other Foundry Claude models, inference on Anthropic-operated infrastructure and not sufficient for EU regional residency) — so residency has to be confirmed per model, not per platform
+- **A.** Nothing — a platform's residency posture applies uniformly to every model it offers
+- **B.** Foundry cannot serve EU residency requirements at all; EU residency requires Bedrock or Vertex AI
+- **C.** Foundry satisfies the requirement only once the full model ID is pinned with the `anthropic.` prefix
+- **D.** Foundry offers Claude in two hosting forms with different residency properties — "Hosted on Azure" (currently Opus 4.8, Sonnet 5, Haiku 4.5, inference end-to-end on Azure infrastructure) and "Hosted on Anthropic" (all other Foundry Claude models, inference on Anthropic-operated infrastructure and not sufficient for EU regional residency) — so residency has to be confirmed per model, not per platform
 
 ### Q23
 
 A developer has reworded a summarization prompt five times — stronger verbs, an "IMPORTANT:" prefix, sentences reordered, a closing reminder added. The output still comes back in the wrong shape, and the prompt is now three times its original length. Why has none of that worked?
 
-A. Each rewrite invalidated the cached prefix, so none of the changes were ever applied to the request
-B. Rewording changes how you say something; it does not add a missing structural technique — a prompt that gets longer with every iteration and still fails is the signal that diagnosis is being skipped and text is just being padded
-C. Emphasis markers like "IMPORTANT:" are ignored unless they appear in the system prompt rather than the user turn
-D. Five differing results is normal variance on a non-deterministic model; a sixth attempt with the same prompt will likely land
+- **A.** Each rewrite invalidated the cached prefix, so none of the changes were ever applied to the request
+- **B.** Rewording changes how you say something; it does not add a missing structural technique — a prompt that gets longer with every iteration and still fails is the signal that diagnosis is being skipped and text is just being padded
+- **C.** Emphasis markers like "IMPORTANT:" are ignored unless they appear in the system prompt rather than the user turn
+- **D.** Five differing results is normal variance on a non-deterministic model; a sixth attempt with the same prompt will likely land
 
 ### Q24
 
 An eval suite has three kinds of case: inputs with exactly one correct label; inputs whose output is a JSON payload that must parse with all required fields present and in range; and inputs whose output is a free-text explanation judged for faithfulness and tone. Which grading assignment matches the output shapes?
 
-A. Exact/string match for the fixed labels, a code-graded check for the JSON payloads, LLM-as-judge for the free text
-B. LLM-as-judge for all three, since a judge subsumes what the cheaper methods can check
-C. Exact/string match for both the labels and the JSON payloads, LLM-as-judge for the free text
-D. Code-graded checks for all three, which keeps the whole suite cheap enough to run on every commit
+- **A.** Exact/string match for the fixed labels, a code-graded check for the JSON payloads, LLM-as-judge for the free text
+- **B.** LLM-as-judge for all three, since a judge subsumes what the cheaper methods can check
+- **C.** Exact/string match for both the labels and the JSON payloads, LLM-as-judge for the free text
+- **D.** Code-graded checks for all three, which keeps the whole suite cheap enough to run on every commit
 
 ### Q25
 
 An engineer lifts working first-party Claude API code into a Vertex AI deployment. The client posts the same JSON body — including `"model": "claude-sonnet-5"` — to the Vertex endpoint. The call fails with an error about a missing required field, and the model name in the body appears to be ignored entirely. What is the correct request shape?
 
-A. Keep the body as-is and add an `anthropic-version` request header; the model name belongs in the body on Vertex just as it does on the first-party API
-B. Move the model name into the body's `anthropic_version` field and drop `model` altogether
-C. Specify the model in the endpoint URL rather than the request body, and include `anthropic_version` as a required body field (for example `vertex-2023-10-16`)
-D. Prefix the model ID with `anthropic.` and leave the rest of the request unchanged
+- **A.** Keep the body as-is and add an `anthropic-version` request header; the model name belongs in the body on Vertex just as it does on the first-party API
+- **B.** Move the model name into the body's `anthropic_version` field and drop `model` altogether
+- **C.** Specify the model in the endpoint URL rather than the request body, and include `anthropic_version` as a required body field (for example `vertex-2023-10-16`)
+- **D.** Prefix the model ID with `anthropic.` and leave the rest of the request unchanged
 
 ### Q26
 
 A Python service's p95 latency for a single Claude call is 4.2 seconds. A developer swaps the `Anthropic` client for `AsyncAnthropic` and awaits the call, expecting that number to drop. It doesn't move. Why, and what did the change actually buy?
 
-A. `AsyncAnthropic` only reduces latency when combined with streaming, which this service does not use
-B. The async client adds event-loop overhead, so per-request latency rises slightly and throughput stays flat
-C. Nothing — `AsyncAnthropic` is a deprecated alias for the synchronous client
-D. The request still returns in real time; async buys concurrency — the application can handle other work while a request is in flight — not lower per-request latency or lower cost
+- **A.** `AsyncAnthropic` only reduces latency when combined with streaming, which this service does not use
+- **B.** The async client adds event-loop overhead, so per-request latency rises slightly and throughput stays flat
+- **C.** Nothing — `AsyncAnthropic` is a deprecated alias for the synchronous client
+- **D.** The request still returns in real time; async buys concurrency — the application can handle other work while a request is in flight — not lower per-request latency or lower cost
 
 ### Q27
 
 A customer wants Claude Code's agent loop, context management, and tool scaffolding without building any of it themselves, and would rather not stand up and secure an execution sandbox either. Their security policy is absolute on one point: the agent's code, filesystem, and network egress must never leave infrastructure they control. Which wiring path fits?
 
-A. Managed Agents — Anthropic runs both the loop and the sandbox, and the sandbox can be pinned to the customer's own region
-B. Self-hosted sandboxes — orchestration stays on Anthropic's side while tool execution moves into infrastructure the customer controls, so the agent's code, filesystem, and network egress never leave their environment
-C. A raw Messages API loop — the only configuration in which tool execution stays inside the customer's environment
-D. The Agent SDK with `setting_sources` left unset, which confines all filesystem access to the customer's process
+- **A.** Managed Agents — Anthropic runs both the loop and the sandbox, and the sandbox can be pinned to the customer's own region
+- **B.** Self-hosted sandboxes — orchestration stays on Anthropic's side while tool execution moves into infrastructure the customer controls, so the agent's code, filesystem, and network egress never leave their environment
+- **C.** A raw Messages API loop — the only configuration in which tool execution stays inside the customer's environment
+- **D.** The Agent SDK with `setting_sources` left unset, which confines all filesystem access to the customer's process
 
 ### Q28
 
 Three weeks from a delivery deadline, a team chose the deployment platform they had shipped on twice before, because the migration path was familiar and the calendar was tight. Every functional test passed. At the customer's security review, the reviewer asked where data was processed. The chosen platform did not satisfy the customer's residency requirement; another platform the team had available, with regional deployment options, would have. The integration was rebuilt on the compliant platform. Which reading of this incident is correct?
 
-A. The failure was in the test suite — a residency assertion in the integration tests would have caught it before review
-B. The failure was the security review's timing; reviews of this kind belong before functional testing rather than after
-C. Familiarity answers whether the team can build quickly; it says nothing about whether the customer is allowed to run the result — for a regulated customer, compliance is usually pass/fail rather than a tradeoff, and the constraint belongs in scoping, where checking early costs a conversation instead of a rebuild
-D. The team should have measured latency from the customer's actual region, which is the measurement that would have surfaced the residency gap
+- **A.** The failure was in the test suite — a residency assertion in the integration tests would have caught it before review
+- **B.** The failure was the security review's timing; reviews of this kind belong before functional testing rather than after
+- **C.** Familiarity answers whether the team can build quickly; it says nothing about whether the customer is allowed to run the result — for a regulated customer, compliance is usually pass/fail rather than a tradeoff, and the constraint belongs in scoping, where checking early costs a conversation instead of a rebuild
+- **D.** The team should have measured latency from the customer's actual region, which is the measurement that would have surfaced the residency gap
 
 ### Q29
 
 A team commits a `.mcp.json` at the repo root registering a warehouse MCP server launched over stdio with `npx`. It works on the author's machine. Two teammates clone the repo and the server fails to start; a third teammate, who does Node work daily, has no trouble. The CI runner fails the same way the two teammates do. What is going on?
 
-A. `.mcp.json` is a local-scope file and is not read from the repo root, so each machine has to re-add the server entry itself
-B. The server has to use HTTP transport, because `.mcp.json` cannot register stdio servers
-C. A project-scope `.mcp.json` distributes the registration, but a stdio server still spawns a local subprocess on each machine — so every teammate and the CI runner needs the runtime installed, here Node for an `npx`-launched server
-D. The two teammates and the CI runner are missing the `${VAR}` secret reference the server's header depends on, which is what prevents the subprocess from launching
+- **A.** `.mcp.json` is a local-scope file and is not read from the repo root, so each machine has to re-add the server entry itself
+- **B.** The server has to use HTTP transport, because `.mcp.json` cannot register stdio servers
+- **C.** A project-scope `.mcp.json` distributes the registration, but a stdio server still spawns a local subprocess on each machine — so every teammate and the CI runner needs the runtime installed, here Node for an `npx`-launched server
+- **D.** The two teammates and the CI runner are missing the `${VAR}` secret reference the server's header depends on, which is what prevents the subprocess from launching
 
 ### Q30
 
 A team switches an extraction endpoint over to JSON outputs with a fixed schema. They notice the first call after each deploy is noticeably slower than the calls that follow it. A second endpoint, which generates a different schema per tenant, is slow on nearly every call rather than just the first. What explains both observations?
 
-A. The schema is validated against the response after generation, and validation time grows with the number of distinct tenants
-B. Structured outputs disable prompt caching, so every request reprocesses the prefix from scratch
-C. The first call after a deploy pays a TLS handshake cost; the per-tenant endpoint is simply hitting rate limits
-D. The API compiles the schema into a grammar before it can constrain output, and compiled grammars are cached for 24 hours from last use — steady traffic on a stable schema pays the compile cost once, while a workload that changes schemas constantly pays it repeatedly
+- **A.** The schema is validated against the response after generation, and validation time grows with the number of distinct tenants
+- **B.** Structured outputs disable prompt caching, so every request reprocesses the prefix from scratch
+- **C.** The first call after a deploy pays a TLS handshake cost; the per-tenant endpoint is simply hitting rate limits
+- **D.** The API compiles the schema into a grammar before it can constrain output, and compiled grammars are cached for 24 hours from last use — steady traffic on a stable schema pays the compile cost once, while a workload that changes schemas constantly pays it repeatedly
 
 ### Q31
 
 When is the decision about which content Claude may treat as instruction-bearing, versus which content it must treat as inert data, properly made?
 
-A. During incident response, once an injection attempt has been observed and its shape is known
-B. At design time, when the message flow is architected — your system prompt and your own user's direct input are instruction-bearing, while retrieved documents, tool results, and third-party content are inert data
-C. At request time by the model, which infers a trust level from the block type each piece of content arrives in
-D. At deploy time, by selecting the permission mode that matches the sensitivity of the content the agent will read
+- **A.** During incident response, once an injection attempt has been observed and its shape is known
+- **B.** At design time, when the message flow is architected — your system prompt and your own user's direct input are instruction-bearing, while retrieved documents, tool results, and third-party content are inert data
+- **C.** At request time by the model, which infers a trust level from the block type each piece of content arrives in
+- **D.** At deploy time, by selecting the permission mode that matches the sensitivity of the content the agent will read
 
 ### Q32
 
 A compliance-summary workload runs on Haiku 4.5 with `thinking.type: "enabled"`, specifically so an auditor can read the reasoning blocks alongside each summary. A quality review moves the workload to Sonnet 5. The team lifts the request body across unchanged and expects identical behavior. What changes?
 
-A. Sonnet 5 uses adaptive thinking — the model decides when and how much to think, tuned via `effort` rather than the extended-thinking `thinking` configuration — and on the newest models thinking content is omitted from the response by default, so summarized display has to be requested explicitly
-B. Nothing changes; `thinking.type: "enabled"` is the shared configuration for both reasoning modes
-C. Sonnet 5 raises the thinking budget automatically, so the same configuration yields deeper but otherwise identical reasoning blocks
-D. Sonnet 5 has no reasoning mode at all; reasoning depth on Sonnet is governed only by `max_tokens`
+- **A.** Sonnet 5 uses adaptive thinking — the model decides when and how much to think, tuned via `effort` rather than the extended-thinking `thinking` configuration — and on the newest models thinking content is omitted from the response by default, so summarized display has to be requested explicitly
+- **B.** Nothing changes; `thinking.type: "enabled"` is the shared configuration for both reasoning modes
+- **C.** Sonnet 5 raises the thinking budget automatically, so the same configuration yields deeper but otherwise identical reasoning blocks
+- **D.** Sonnet 5 has no reasoning mode at all; reasoning depth on Sonnet is governed only by `max_tokens`
 
 ### Q33
 
 During setup, an API key was pasted inline into `.mcp.json` and committed. Twenty minutes later the developer noticed, replaced the literal with a `${VAR}` reference, and pushed that as the next commit. What still has to happen, and why?
 
-A. Nothing further — the follow-up commit removed the literal value from the configuration the team actually loads
-B. Force-push a rewritten branch, which removes the key from everywhere it could have propagated
-C. Add a `PostToolUse` hook that scans future commits for credential-shaped patterns, which closes the exposure
-D. The key has to be rotated: overwriting the file in a later commit does not remove it from history, so anyone who ever had read access to the repo may have had the key — and the rotation has to account for every other service configured with the same value, since those consumers break when it changes
+- **A.** Nothing further — the follow-up commit removed the literal value from the configuration the team actually loads
+- **B.** Force-push a rewritten branch, which removes the key from everywhere it could have propagated
+- **C.** Add a `PostToolUse` hook that scans future commits for credential-shaped patterns, which closes the exposure
+- **D.** The key has to be rotated: overwriting the file in a later commit does not remove it from history, so anyone who ever had read access to the repo may have had the key — and the rotation has to account for every other service configured with the same value, since those consumers break when it changes
 
 ### Q34
 
 Which statement describes CLAUDE.md's place in configuration management?
 
-A. It is generated by `/init` and should be treated as machine-managed output rather than hand-edited
-B. It holds user-scoped preferences, so it belongs in `~/.claude` and outside the repository
-C. It carries project and user conventions plus persistent context, and is version-controlled like code — one of four configuration artifacts (alongside settings.json, model version pins, and prompt versions) that get code-level rigor precisely because none of them are compiled or type-checked
-D. It is re-read only when its contents change, so version control adds nothing beyond a backup copy
+- **A.** It is generated by `/init` and should be treated as machine-managed output rather than hand-edited
+- **B.** It holds user-scoped preferences, so it belongs in `~/.claude` and outside the repository
+- **C.** It carries project and user conventions plus persistent context, and is version-controlled like code — one of four configuration artifacts (alongside settings.json, model version pins, and prompt versions) that get code-level rigor precisely because none of them are compiled or type-checked
+- **D.** It is re-read only when its contents change, so version control adds nothing beyond a backup copy
 
 ### Q35
 
 An agent loop is running under the Agent SDK with a `PreToolUse` hook that denies any `write_file` whose path falls outside `/workspace/output`. On turn 6, Claude requests a write to `/etc/limits.conf`. Walk through what happens next.
 
-A. The hook's denial raises an exception inside the SDK, ending the session with an `error_during_execution` result subtype
-B. The tool never runs — the denial short-circuits the loop at that call, Claude receives the rejection as the tool result and typically tries a different approach, and because the hook runs in the application process rather than the model's context window it costs no tokens to enforce
-C. The write executes and the hook records it afterwards, since `PreToolUse` can inspect a call but not block it
-D. The call is placed in a confirmation queue and resumes if an operator approves it, since a hook denial maps to an `ask` decision
+- **A.** The hook's denial raises an exception inside the SDK, ending the session with an `error_during_execution` result subtype
+- **B.** The tool never runs — the denial short-circuits the loop at that call, Claude receives the rejection as the tool result and typically tries a different approach, and because the hook runs in the application process rather than the model's context window it costs no tokens to enforce
+- **C.** The write executes and the hook records it afterwards, since `PreToolUse` can inspect a call but not block it
+- **D.** The call is placed in a confirmation queue and resumes if an operator approves it, since a hook denial maps to an `ask` decision
 
 ### Q36
 
 A team wants guidance about explicit SQL transaction boundaries to load only when Claude is working on files under `src/db/`, and to stay out of the way everywhere else. Where does that scoping come from?
 
-A. A `paths` glob in the rules file's YAML frontmatter (for example `paths: ["src/db/**/*.sql"]`) — not from the directory the file sits in; a rules file with no `paths` field loads unconditionally at the same priority as CLAUDE.md
-B. Placing the rules file inside `src/db/`, which scopes it to that subtree
-C. A `paths` entry in `.claude/settings.json` mapping directories to rules files
-D. A `disable-model-invocation: true` flag in the rules file's frontmatter, which limits it to the files under review
+- **A.** A `paths` glob in the rules file's YAML frontmatter (for example `paths: ["src/db/**/*.sql"]`) — not from the directory the file sits in; a rules file with no `paths` field loads unconditionally at the same priority as CLAUDE.md
+- **B.** Placing the rules file inside `src/db/`, which scopes it to that subtree
+- **C.** A `paths` entry in `.claude/settings.json` mapping directories to rules files
+- **D.** A `disable-model-invocation: true` flag in the rules file's frontmatter, which limits it to the files under review
 
 ### Q37
 
 A "small wording tweak" to a production system prompt measurably degraded output quality. The prompt lives as a string literal that gets edited in place; nobody can say what it said last week, and the on-call engineer's only option is to rewrite it from memory and hope. Which practice was missing?
 
-A. Structured outputs on the endpoint, which would have held the output shape stable through the tweak
-B. Model version pinning, which would have prevented the behavior shift in the first place
-C. A `PreToolUse` hook validating the prompt before each request goes out
-D. Prompt versioning — system prompts and few-shot examples are production configuration, tracked in version control with changelogs and rollback capability, because a small wording change can measurably shift the output distribution and nothing else will catch the regression before users do
+- **A.** Structured outputs on the endpoint, which would have held the output shape stable through the tweak
+- **B.** Model version pinning, which would have prevented the behavior shift in the first place
+- **C.** A `PreToolUse` hook validating the prompt before each request goes out
+- **D.** Prompt versioning — system prompts and few-shot examples are production configuration, tracked in version control with changelogs and rollback capability, because a small wording change can measurably shift the output distribution and nothing else will catch the regression before users do
 
 ### Q38
 
 A configuration being migrated to a newer pinned model sets a large `budget_tokens` value to buy deep reasoning on a multi-step analysis task. What replaces it?
 
-A. `max_tokens`, raised to the same value, which is where reasoning tokens are now accounted for
-B. `thinking.type: "enabled"` alongside the existing budget, which is still honored behind a beta header
-C. An `effort` level — `budget_tokens` is deprecated and returns a 400 on the newest generations, and reasoning depth is set through `effort`, with `max` reserved for multi-step problems needing the deepest analysis
-D. A lower `temperature`, so the model spends more steps converging on an answer
+- **A.** `max_tokens`, raised to the same value, which is where reasoning tokens are now accounted for
+- **B.** `thinking.type: "enabled"` alongside the existing budget, which is still honored behind a beta header
+- **C.** An `effort` level — `budget_tokens` is deprecated and returns a 400 on the newest generations, and reasoning depth is set through `effort`, with `max` reserved for multi-step problems needing the deepest analysis
+- **D.** A lower `temperature`, so the model spends more steps converging on an answer
 
 ### Q39
 
 An extraction endpoint currently prefills the assistant turn with `{"` to force the response into JSON. The team wants a hard guarantee instead of a nudge, so they add `output_config.format` with a `json_schema` while leaving the prefill in place. The request fails. What is the correct read?
 
-A. JSON outputs and message prefilling are mutually exclusive on the same request, so pick one — and since the schema does the constraining through constrained decoding, the prefill is what to drop
-B. The prefill has to be valid against the schema; `{"` is an incomplete fragment, so completing it to a full skeleton object resolves the conflict
-C. Prefilling works only with strict tool use, not JSON outputs, so the endpoint should be converted into a tool call
-D. The schema needs `additionalProperties: false` before a prefill will be accepted alongside it
+- **A.** JSON outputs and message prefilling are mutually exclusive on the same request, so pick one — and since the schema does the constraining through constrained decoding, the prefill is what to drop
+- **B.** The prefill has to be valid against the schema; `{"` is an incomplete fragment, so completing it to a full skeleton object resolves the conflict
+- **C.** Prefilling works only with strict tool use, not JSON outputs, so the endpoint should be converted into a tool call
+- **D.** The schema needs `additionalProperties: false` before a prefill will be accepted alongside it
 
 ### Q40
 
 A developer installs one plugin from the team's marketplace. Afterwards, the plugin list shows three installed plugins — two that nobody asked for. No settings.json file changed, and no other install command was run. What happened?
 
-A. The marketplace pushed its full catalog, because `extraKnownMarketplaces` auto-registers every plugin a marketplace lists
-B. The installed plugin declared dependencies in its `plugin.json`, and installing from a marketplace can auto-install those declared dependencies, with marketplace-entry fields able to override or supplement the declaration — a plugin's dependency graph is configuration you inherit alongside its headline capability
-C. Claude Code auto-installs any MCP server a plugin's `SKILL.md` refers to, and each server registers as its own plugin
-D. The two extra plugins were already installed but stayed hidden from the list until a marketplace source was added
+- **A.** The marketplace pushed its full catalog, because `extraKnownMarketplaces` auto-registers every plugin a marketplace lists
+- **B.** The installed plugin declared dependencies in its `plugin.json`, and installing from a marketplace can auto-install those declared dependencies, with marketplace-entry fields able to override or supplement the declaration — a plugin's dependency graph is configuration you inherit alongside its headline capability
+- **C.** Claude Code auto-installs any MCP server a plugin's `SKILL.md` refers to, and each server registers as its own plugin
+- **D.** The two extra plugins were already installed but stayed hidden from the list until a marketplace source was added
 
 ### Q41
 
 An agent has two tools: `find_account(email)`, which returns an account ID, and `get_balance(account_id)`. Current models default to issuing multiple independent `tool_use` blocks in a single turn, and that is exactly what happens here — Claude emits both calls in one turn, with a plausible-looking but invented value in `account_id`, and the second call fails against a real account store. How should the exchange be structured?
 
-A. Keep both calls in the one turn and set `strict: true` on `get_balance`, so the invented argument is rejected before your code runs
-B. Keep both calls in the one turn, return `is_error: true` on the second `tool_result`, and let Claude retry the call within that same turn
-C. Merge the two tools into one behind a `type` parameter, which is the standard fix for calls that depend on each other
-D. Structure it as separate turns: the second call cannot be built correctly until the first result is back, so let the first `tool_use` be answered by its matching `tool_result` in the immediately following user turn and let Claude issue the second call after that — reaching for `disable_parallel_tool_use` if the workflow needs strictly one call per turn
+- **A.** Keep both calls in the one turn and set `strict: true` on `get_balance`, so the invented argument is rejected before your code runs
+- **B.** Keep both calls in the one turn, return `is_error: true` on the second `tool_result`, and let Claude retry the call within that same turn
+- **C.** Merge the two tools into one behind a `type` parameter, which is the standard fix for calls that depend on each other
+- **D.** Structure it as separate turns: the second call cannot be built correctly until the first result is back, so let the first `tool_use` be answered by its matching `tool_result` in the immediately following user turn and let Claude issue the second call after that — reaching for `disable_parallel_tool_use` if the workflow needs strictly one call per turn
 
 ### Q42
 
 The same support engineer works with an agent in many short sessions across a week, and each new session needs the decisions reached in the previous ones. Which memory scope fits?
 
-A. In-context — resend the whole accumulated history at the start of each new session
-B. Stateless — start each session fresh, which keeps per-session token cost flat and predictable
-C. External storage — state written to a database at session end and read back at session start, which is what the same-user-continuing-across-many-shorter-sessions case calls for
-D. In-context with compaction, since compaction is the only mechanism that carries state across a session boundary
+- **A.** In-context — resend the whole accumulated history at the start of each new session
+- **B.** Stateless — start each session fresh, which keeps per-session token cost flat and predictable
+- **C.** External storage — state written to a database at session end and read back at session start, which is what the same-user-continuing-across-many-shorter-sessions case calls for
+- **D.** In-context with compaction, since compaction is the only mechanism that carries state across a session boundary
 
 ### Q43
 
 A team's code-review checklist covers application logic. Prompt edits and tool-schema edits travel a "content-only" fast path with no reviewer attached, on the reasoning that neither is really code. After a one-word prompt edit shifted the output shape in production and broke a downstream parser, the team wants a durable fix. Which change addresses it?
 
-A. Bring prompt diffs and tool-schema diffs explicitly into code-review scope, and put the eval suite in CI so a prompt or model-version change fails the build the way a broken unit test does
-B. Keep the fast path but require a second engineer to run the changed prompt manually a few times before merging
-C. Add type annotations to the tool schema so the compiler catches breaking changes at build time
-D. Move prompts into the CLAUDE.md hierarchy so they are re-injected on every request rather than reviewed
+- **A.** Bring prompt diffs and tool-schema diffs explicitly into code-review scope, and put the eval suite in CI so a prompt or model-version change fails the build the way a broken unit test does
+- **B.** Keep the fast path but require a second engineer to run the changed prompt manually a few times before merging
+- **C.** Add type annotations to the tool schema so the compiler catches breaking changes at build time
+- **D.** Move prompts into the CLAUDE.md hierarchy so they are re-injected on every request rather than reviewed
 
 ### Q44
 
 A team marks a `cache_control` breakpoint after a 30,000-token block holding the system prompt and tool definitions, and chooses the 1-hour TTL because requests arrive in bursts about 40 minutes apart. Traffic volume is unchanged, but the input portion of the bill roughly doubles. Inspecting the block, its first line reads `Current time: 2026-04-14T09:22:07Z`, regenerated on every request. What is happening, and what is the fix?
 
-A. The 1-hour TTL is billed for the full hour whether or not the cached prefix is ever read, so short bursts never recover the charge
-B. A single changed character before the cache point invalidates the cache and forces a fresh, paid write — so every request pays the write premium (roughly 2x base input at the 1-hour TTL) and none ever earns the read discount; caching only pays when reads outnumber writes, so move the volatile line after the breakpoint or out of the cached prefix entirely
-C. The block sits below the minimum token threshold, so nothing was ever cached; raise it above the per-block minimum
-D. Cache reads are billed at the same rate as base input tokens, so caching only ever buys latency — the doubled bill is the expected cost of the write premium
+- **A.** The 1-hour TTL is billed for the full hour whether or not the cached prefix is ever read, so short bursts never recover the charge
+- **B.** A single changed character before the cache point invalidates the cache and forces a fresh, paid write — so every request pays the write premium (roughly 2x base input at the 1-hour TTL) and none ever earns the read discount; caching only pays when reads outnumber writes, so move the volatile line after the breakpoint or out of the cached prefix entirely
+- **C.** The block sits below the minimum token threshold, so nothing was ever cached; raise it above the per-block minimum
+- **D.** Cache reads are billed at the same rate as base input tokens, so caching only ever buys latency — the doubled bill is the expected cost of the write premium
 
 ### Q45
 
 An EU customer's requirement is that model inference must never occur outside the EU. The team's proposal: stay on the first-party Claude API, place an EU-hosted proxy in front of it so all application traffic originates in the EU, and add a `region` field to the client configuration. Assess the proposal.
 
-A. It works — pinning a region in the client configuration is the accepted pattern here, and the EU-hosted proxy supplies the processing boundary
-B. It works, but only if the proxy strips personal data before forwarding each request
-C. It does not work: the direct Anthropic API does not currently provide EU data residency, and where your application calls from does not determine where inference runs — EU-residency workloads route through Amazon Bedrock or Google Vertex AI with the region pinned in the client configuration
-D. It does not work because EU residency requires a signed Business Associate Agreement, which the first-party API does not offer to EU customers
+- **A.** It works — pinning a region in the client configuration is the accepted pattern here, and the EU-hosted proxy supplies the processing boundary
+- **B.** It works, but only if the proxy strips personal data before forwarding each request
+- **C.** It does not work: the direct Anthropic API does not currently provide EU data residency, and where your application calls from does not determine where inference runs — EU-residency workloads route through Amazon Bedrock or Google Vertex AI with the region pinned in the client configuration
+- **D.** It does not work because EU residency requires a signed Business Associate Agreement, which the first-party API does not offer to EU customers
 
 ### Q46
 
 A team's priority for a Python service is validated, strongly typed inputs and outputs, with no need for multi-agent coordination machinery. Which of the frameworks the exam blueprint names fits that priority?
 
-A. LangGraph
-B. Strands Agents
-C. The Claude Agent SDK
-D. PydanticAI
+- **A.** LangGraph
+- **B.** Strands Agents
+- **C.** The Claude Agent SDK
+- **D.** PydanticAI
 
 ### Q47
 
 A structured-output endpoint returns a payload that parses cleanly, carries every required field with values inside their declared ranges, and reads fluently. QA marks the feature green on that basis. What is the gap?
 
-A. Structure and meaning are separate validations — parsing, field presence, and range checks establish that the output is well-formed, not that it is right; meaning needs an eval with a model-graded judge, and a fluent, confident-sounding response is not evidence of correctness
-B. There is no gap — a schema-constrained response that parses is correct by construction, which is the point of constrained decoding
-C. The gap is `stop_reason`, but since the payload parsed it was neither a refusal nor a truncation, so nothing further is required
-D. The gap is caching — a stale cached prefix is the usual cause of a well-formed but wrong structured payload
+- **A.** Structure and meaning are separate validations — parsing, field presence, and range checks establish that the output is well-formed, not that it is right; meaning needs an eval with a model-graded judge, and a fluent, confident-sounding response is not evidence of correctness
+- **B.** There is no gap — a schema-constrained response that parses is correct by construction, which is the point of constrained decoding
+- **C.** The gap is `stop_reason`, but since the payload parsed it was neither a refusal nor a truncation, so nothing further is required
+- **D.** The gap is caching — a stale cached prefix is the usual cause of a well-formed but wrong structured payload
 
 ### Q48
 
 What are the two halves of keeping an MCP server's credential out of a repository — one that communicates the intent and one that enforces it?
 
-A. A `.gitignore` entry for `.mcp.json` plus a pre-commit secret scanner
-B. A `${VAR}` reference in the config so the value lives in the environment or a secret store rather than the file, plus a `PreToolUse` hook that inspects writes and edits to `.mcp.json` for credential-shaped patterns and blocks them — the CLAUDE.md convention communicates intent, the hook enforces it regardless of what the model decides
-C. `bypassPermissions` disabled plus a `PostToolUse` hook that redacts the key once the write has completed
-D. OAuth on the server plus a rotation schedule, which removes the need for any config-level credential reference at all
+- **A.** A `.gitignore` entry for `.mcp.json` plus a pre-commit secret scanner
+- **B.** A `${VAR}` reference in the config so the value lives in the environment or a secret store rather than the file, plus a `PreToolUse` hook that inspects writes and edits to `.mcp.json` for credential-shaped patterns and blocks them — the CLAUDE.md convention communicates intent, the hook enforces it regardless of what the model decides
+- **C.** `bypassPermissions` disabled plus a `PostToolUse` hook that redacts the key once the write has completed
+- **D.** OAuth on the server plus a rotation schedule, which removes the need for any config-level credential reference at all
 
 ### Q49
 
 An engagement build works and the deadline was met. The customer's repo path, two alerting thresholds, and three prompt fragments are hardcoded into the agent loop; the eval suite lives on one engineer's personal branch; and the two engineers who know which of those values are customer-specific versus load-bearing roll onto a new engagement next week. The team asks whether to invest in packaging now or wait until a reuse request actually arrives.
 
-A. Wait — packaging before a second engagement exists is speculative work, and the values can be parameterized once a concrete reuse case appears
-B. Package by writing a README that walks through the implementation, since that is what a future team will actually need to read
-C. Package now: separate the customer-specific values into documented, parameterized configuration with defaults and bundle the eval suite alongside the code, because the knowledge of what is customer-specific versus load-bearing is cheapest to write down before the people who hold it move on
-D. Package by committing the eval suite and leaving the hardcoded values as they are, since running the eval will show a future team which values matter
+- **A.** Wait — packaging before a second engagement exists is speculative work, and the values can be parameterized once a concrete reuse case appears
+- **B.** Package by writing a README that walks through the implementation, since that is what a future team will actually need to read
+- **C.** Package now: separate the customer-specific values into documented, parameterized configuration with defaults and bundle the eval suite alongside the code, because the knowledge of what is customer-specific versus load-bearing is cheapest to write down before the people who hold it move on
+- **D.** Package by committing the eval suite and leaving the hardcoded values as they are, since running the eval will show a future team which values matter
 
 ### Q50
 
 A cost model for a caching agent reads each response's usage fields and sums them into a single "total input tokens" figure. Why does that misstate cost, and what should it track instead?
 
-A. Cache reads, cache writes, and regular input tokens are priced differently, so one combined total misstates cost as soon as caching is in play — track the three separately, from the `usage` block on the raw Messages API or the usage and `total_cost_usd` fields on the Agent SDK's `ResultMessage`
-B. Output tokens are folded into the input total on cached requests, double-counting them
-C. Cached requests report zero input tokens, so the running total understates actual volume
-D. Input tokens are free once a cache breakpoint is set, so only output tokens need modeling
+- **A.** Cache reads, cache writes, and regular input tokens are priced differently, so one combined total misstates cost as soon as caching is in play — track the three separately, from the `usage` block on the raw Messages API or the usage and `total_cost_usd` fields on the Agent SDK's `ResultMessage`
+- **B.** Output tokens are folded into the input total on cached requests, double-counting them
+- **C.** Cached requests report zero input tokens, so the running total understates actual volume
+- **D.** Input tokens are free once a cache breakpoint is set, so only output tokens need modeling
 
 ## Section C — Answer Key and Explanations
 

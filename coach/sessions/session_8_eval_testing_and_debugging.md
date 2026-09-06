@@ -94,91 +94,91 @@ The reasoning: 429 is retriable, so the fix is classification plus discipline �
 
 What distinguishes an eval from "I tried it a few times and it looked right", and when should it be written?
 
-A. An eval is a production monitoring dashboard, built after launch once real traffic exists
-B. An eval is a fixed set of input cases with written expected behavior, run and graded to produce a score — and it should be written before the feature, so success is defined rather than rationalized afterward
-C. An eval is a load test measuring latency under concurrency, written during the deploy phase
-D. An eval is a one-time acceptance check performed at handover and then retired
+- **A.** An eval is a production monitoring dashboard, built after launch once real traffic exists
+- **B.** An eval is a fixed set of input cases with written expected behavior, run and graded to produce a score — and it should be written before the feature, so success is defined rather than rationalized afterward
+- **C.** An eval is a load test measuring latency under concurrency, written during the deploy phase
+- **D.** An eval is a one-time acceptance check performed at handover and then retired
 
 ### Q2
 
 A feature returns a JSON object your code consumes. You want a check cheap enough to run on every commit. Which grading method, and what won't it tell you?
 
-A. LLM-as-judge, which will report both format and content quality
-B. Exact string match, which is the only method suitable for JSON
-C. A code-graded check — does it parse, are required fields present, are values in range — which says nothing about whether the content is any good
-D. No automated grading is possible for structured output; it requires manual review
+- **A.** LLM-as-judge, which will report both format and content quality
+- **B.** Exact string match, which is the only method suitable for JSON
+- **C.** A code-graded check — does it parse, are required fields present, are values in range — which says nothing about whether the content is any good
+- **D.** No automated grading is possible for structured output; it requires manual review
 
 ### Q3
 
 A team wants to run a 1,000-case eval on every commit and is considering LLM-as-judge for all of it. What's the correct assessment?
 
-A. Correct — a judge is the most accurate method, so it should be used wherever possible
-B. Incorrect — judges can't evaluate structured output at all
-C. Correct, provided the judge runs on a cheaper model tier
-D. A judge is a second model call per case, so 1,000 cases means 1,000 extra API calls every run — grade format and structure with code in the inner loop and reserve the judge for a slower, scheduled quality pass
+- **A.** Correct — a judge is the most accurate method, so it should be used wherever possible
+- **B.** Incorrect — judges can't evaluate structured output at all
+- **C.** Correct, provided the judge runs on a cheaper model tier
+- **D.** A judge is a second model call per case, so 1,000 cases means 1,000 extra API calls every run — grade format and structure with code in the inner loop and reserve the judge for a slower, scheduled quality pass
 
 ### Q4
 
 An eval score moves from 62% to 71% after a change in which the team swapped the model tier and rewrote the system prompt. What's the problem, and what else should they check?
 
-A. They can't attribute the gain to either change — one variable per iteration — and they should read the per-case breakdown, because a steady or improved average can hide cases that regressed
-B. Nothing; a 9-point gain justifies keeping both changes
-C. The score is invalid because model and prompt changes can't be evaluated by the same suite
-D. They should re-run the eval several times and average, since the score itself is non-deterministic
+- **A.** They can't attribute the gain to either change — one variable per iteration — and they should read the per-case breakdown, because a steady or improved average can hide cases that regressed
+- **B.** Nothing; a 9-point gain justifies keeping both changes
+- **C.** The score is invalid because model and prompt changes can't be evaluated by the same suite
+- **D.** They should re-run the eval several times and average, since the score itself is non-deterministic
 
 ### Q5
 
 A retrieval-augmented feature has passing unit tests for its parser and passing functional tests for its Claude call, yet the model answers from memory instead of the retrieved policy. Which test level would have caught this, and why did the others miss it?
 
-A. Unit tests, with better mocking of the retrieval function
-B. End-to-end tests, which are the only level that exercises real data
-C. Integration tests, which drive the seam where one component hands off to another — the unit worked in isolation and the functional call worked on well-formed input, so neither could see a broken handoff
-D. Functional tests, run against a larger sample of inputs
+- **A.** Unit tests, with better mocking of the retrieval function
+- **B.** End-to-end tests, which are the only level that exercises real data
+- **C.** Integration tests, which drive the seam where one component hands off to another — the unit worked in isolation and the functional call worked on well-formed input, so neither could see a broken handoff
+- **D.** Functional tests, run against a larger sample of inputs
 
 ### Q6
 
 An eval case fails. What does a trace add that the failing score doesn't?
 
-A. A statistical confidence interval for the score
-B. A timeline of each step's prompt, tool calls, intermediate outputs, and timing — turning "something's wrong" into which step failed and how
-C. An automatic retry of the failing case with a higher effort level
-D. A comparison against the previous model version's output for the same case
+- **A.** A statistical confidence interval for the score
+- **B.** A timeline of each step's prompt, tool calls, intermediate outputs, and timing — turning "something's wrong" into which step failed and how
+- **C.** An automatic retry of the failing case with a higher effort level
+- **D.** A comparison against the previous model version's output for the same case
 
 ### Q7
 
 Which of these should your client treat as retriable?
 
-A. 400 and 403, since both can succeed on a second attempt once the service settles
-B. 401, because credentials are often propagating at the moment of the call
-C. 404, because a resource may not have finished being created
-D. 429 and 529 — plus 500/502/503/504 — because they're rate-limit or transient server-side faults, whereas 400/401/403/404 fail identically on an identical retry
+- **A.** 400 and 403, since both can succeed on a second attempt once the service settles
+- **B.** 401, because credentials are often propagating at the moment of the call
+- **C.** 404, because a resource may not have finished being created
+- **D.** 429 and 529 — plus 500/502/503/504 — because they're rate-limit or transient server-side faults, whereas 400/401/403/404 fail identically on an identical retry
 
 ### Q8
 
 A developer adds a retry loop with exponential backoff around every Claude call, on top of the SDK's own retry behavior. What's the consequence?
 
-A. Attempts multiply against the same rate limit rather than being capped — decide explicitly whether the SDK owns transient retries or your code does, and honor `retry-after` over guessing at backoff
-B. Nothing measurable; the SDK detects an outer retry loop and disables its own
-C. Latency improves because the two mechanisms interleave attempts
-D. The SDK's retries only cover connection errors, so the outer loop is always required
+- **A.** Attempts multiply against the same rate limit rather than being capped — decide explicitly whether the SDK owns transient retries or your code does, and honor `retry-after` over guessing at backoff
+- **B.** Nothing measurable; the SDK detects an outer retry loop and disables its own
+- **C.** Latency improves because the two mechanisms interleave attempts
+- **D.** The SDK's retries only cover connection errors, so the outer loop is always required
 
 ### Q9
 
 A response arrives with HTTP 200 and `stop_reason: "refusal"`. How should the application treat it?
 
-A. As a transient failure — retry with backoff, since the status code is a success
-B. As a 400-class error, converted and returned to the caller as a bad request
-C. As a content decision, not a transient fault: raise it to the caller and log it, never silently retry it or treat it as valid output — and note the status-code classifier won't catch it, because the HTTP status is 200
-D. As valid output, since the request completed successfully at the transport level
+- **A.** As a transient failure — retry with backoff, since the status code is a success
+- **B.** As a 400-class error, converted and returned to the caller as a bad request
+- **C.** As a content decision, not a transient fault: raise it to the caller and log it, never silently retry it or treat it as valid output — and note the status-code classifier won't catch it, because the HTTP status is 200
+- **D.** As valid output, since the request completed successfully at the transport level
 
 ### Q10
 
 A tool's implementation catches its own exceptions and returns an empty result so the agent doesn't crash. What does this cause?
 
-A. The agent halts, because an empty tool result fails request validation
-B. A confident but wrong downstream answer — the model treats the empty result as valid data and reasons on top of it, which is why a failing tool should return `is_error: true` on the `tool_result`
-C. An automatic retry of the tool call by the SDK, up to the configured attempt count
-D. Nothing harmful; empty results are the standard way to signal tool failure
+- **A.** The agent halts, because an empty tool result fails request validation
+- **B.** A confident but wrong downstream answer — the model treats the empty result as valid data and reasons on top of it, which is why a failing tool should return `is_error: true` on the `tool_result`
+- **C.** An automatic retry of the tool call by the SDK, up to the configured attempt count
+- **D.** Nothing harmful; empty results are the standard way to signal tool failure
 
 ---
 

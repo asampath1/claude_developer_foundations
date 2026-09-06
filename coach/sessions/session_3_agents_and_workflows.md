@@ -83,118 +83,118 @@ The reasoning: everything operational points at Managed Agents, and the complian
 
 A pipeline generates a marketing summary with one model call, then passes it to a second call that critiques it against a rubric and returns feedback, and loops until the critique passes. Which named pattern is this?
 
-A. Prompt chaining
-B. Orchestrator-workers
-C. Evaluator-optimizer
-D. Parallelization by voting
+- **A.** Prompt chaining
+- **B.** Orchestrator-workers
+- **C.** Evaluator-optimizer
+- **D.** Parallelization by voting
 
 ### Q2
 
 A team can't decide whether a new document-handling task needs a workflow or an agent — the inputs seem varied but they aren't certain the steps are genuinely unpredictable. What does Anthropic's guidance recommend?
 
-A. Start with an agent, then extract deterministic workflow patterns as they emerge from real usage
-B. Always default to a workflow, since predictability is never the wrong tradeoff
-C. Build both and route traffic between them based on input length
-D. Defer the decision until an eval suite exists, since architecture can't be chosen without one
+- **A.** Start with an agent, then extract deterministic workflow patterns as they emerge from real usage
+- **B.** Always default to a workflow, since predictability is never the wrong tradeoff
+- **C.** Build both and route traffic between them based on input length
+- **D.** Defer the decision until an eval suite exists, since architecture can't be chosen without one
 
 ### Q3
 
 A team runs the same risk-assessment prompt three times on each input and takes the majority answer. Which pattern and variant is this, and what does it buy?
 
-A. Prompt chaining — accuracy through focused attention per step
-B. Routing — different handlers for different categories
-C. Parallelization by sectioning — speed, by splitting independent subtasks
-D. Parallelization by voting — confidence, by running multiple attempts at the same task
+- **A.** Prompt chaining — accuracy through focused attention per step
+- **B.** Routing — different handlers for different categories
+- **C.** Parallelization by sectioning — speed, by splitting independent subtasks
+- **D.** Parallelization by voting — confidence, by running multiple attempts at the same task
 
 ### Q4
 
 A central agent receives every request, maintains a list of specialist worker agents, delegates to them, and reviews and aggregates their output without doing the work itself. As the worker count grows, mid-level coordinators are introduced between the top agent and the workers. Name the structure and the variant.
 
-A. Evaluator-optimizer, extended into a chain
-B. The supervisor (leader-worker) pattern, extended into its hierarchical variant
-C. Routing, extended into cascading routes
-D. Orchestrator-workers, extended into voting
+- **A.** Evaluator-optimizer, extended into a chain
+- **B.** The supervisor (leader-worker) pattern, extended into its hierarchical variant
+- **C.** Routing, extended into cascading routes
+- **D.** Orchestrator-workers, extended into voting
 
 ### Q5
 
 Assuming no `max_turns` or `max_budget_usd` limit is reached, what ends the Agent SDK's loop?
 
-A. Claude produces a response containing no tool calls, after which the SDK emits a final `AssistantMessage` and then a `ResultMessage`
-B. Nothing — the loop runs until a limit is hit, which is why `max_turns` is mandatory
-C. Every registered tool has been called at least once
-D. The harness sends an explicit stop signal after each tool result is returned
+- **A.** Claude produces a response containing no tool calls, after which the SDK emits a final `AssistantMessage` and then a `ResultMessage`
+- **B.** Nothing — the loop runs until a limit is hit, which is why `max_turns` is mandatory
+- **C.** Every registered tool has been called at least once
+- **D.** The harness sends an explicit stop signal after each tool result is returned
 
 ### Q6
 
 An agent is configured with `max_budget_usd`. The run exceeds the cap partway through. What does the application observe?
 
-A. An exception raised mid-loop, which the harness must catch to avoid crashing
-B. The loop continues to completion and the overage is billed as normal
-C. A `ResultMessage` with an `error_max_budget_usd` subtype, returned rather than raised
-D. A silent truncation, with no signal distinguishing it from a normal completion
+- **A.** An exception raised mid-loop, which the harness must catch to avoid crashing
+- **B.** The loop continues to completion and the overage is billed as normal
+- **C.** A `ResultMessage` with an `error_max_budget_usd` subtype, returned rather than raised
+- **D.** A silent truncation, with no signal distinguishing it from a normal completion
 
 ### Q7
 
 A team wants Claude Code's loop, context management, and tool scaffolding without rebuilding it, running inside their own Python service where they execute the tools themselves. Which path fits, and what's the configuration trap?
 
-A. Managed Agents — and the trap is forgetting the beta header
-B. The Agent SDK, self-hosted — and the trap is relying on a default for `setting_sources`, which gates whether CLAUDE.md, skills, and hooks load at all
-C. A raw Messages API loop — and the trap is forgetting to append tool results
-D. Claude Desktop — and the trap is per-user configuration drift
+- **A.** Managed Agents — and the trap is forgetting the beta header
+- **B.** The Agent SDK, self-hosted — and the trap is relying on a default for `setting_sources`, which gates whether CLAUDE.md, skills, and hooks load at all
+- **C.** A raw Messages API loop — and the trap is forgetting to append tool results
+- **D.** Claude Desktop — and the trap is per-user configuration drift
 
 ### Q8
 
 A regulated customer will accept Anthropic running the agent's orchestration, but the agent's code, filesystem, and network egress must stay inside infrastructure they control. What fits?
 
-A. Managed Agents, since the sandbox is fully managed
-B. A raw Messages API loop, which is the only compliant option
-C. The Agent SDK with `permission_mode` set to `dontAsk`
-D. Self-hosted sandboxes — orchestration stays on Anthropic's side while tool execution runs in the customer's own environment
+- **A.** Managed Agents, since the sandbox is fully managed
+- **B.** A raw Messages API loop, which is the only compliant option
+- **C.** The Agent SDK with `permission_mode` set to `dontAsk`
+- **D.** Self-hosted sandboxes — orchestration stays on Anthropic's side while tool execution runs in the customer's own environment
 
 ### Q9
 
 Why is a `PreToolUse` hook a stronger control than a system-prompt instruction saying "never delete files outside the working directory", and what does it cost in context?
 
-A. It runs in your application process as deterministic code rather than a model-followed instruction, and consumes no context-window tokens at all
-B. It is injected into the system prompt with higher priority, at the cost of a few hundred tokens per request
-C. It retrains the model against the disallowed action for the remainder of the session, at no token cost
-D. It is equivalent in strength; the only difference is that hooks are easier to version-control
+- **A.** It runs in your application process as deterministic code rather than a model-followed instruction, and consumes no context-window tokens at all
+- **B.** It is injected into the system prompt with higher priority, at the cost of a few hundred tokens per request
+- **C.** It retrains the model against the disallowed action for the remainder of the session, at no token cost
+- **D.** It is equivalent in strength; the only difference is that hooks are easier to version-control
 
 ### Q10
 
 An assistant helps the same engineer across many separate 15-minute sessions spread over weeks, and each session needs to know what happened previously. Which memory scope fits?
 
-A. In-context memory, keeping the whole history in the live conversation
-B. Stateless, since each session is short and independently scoped
-C. External storage — write state at session end, read it back at session start, injecting only the relevant subset
-D. No scope fits; the work must be restructured into one continuous session
+- **A.** In-context memory, keeping the whole history in the live conversation
+- **B.** Stateless, since each session is short and independently scoped
+- **C.** External storage — write state at session end, read it back at session start, injecting only the relevant subset
+- **D.** No scope fits; the work must be restructured into one continuous session
 
 ### Q11
 
 A team needs to coordinate dozens of agents on a long-running data-migration program — far more than a handful of delegated tasks per turn. What does the SDK offer beyond ordinary subagent delegation?
 
-A. Increasing `max_turns` until every agent fits in one conversation
-B. Registering each agent as an MCP server so they can call one another
-C. Nothing — subagent delegation is the only supported orchestration mechanism
-D. The `Workflow` tool, which moves orchestration into a script executed outside the conversation's own context rather than inside the manager agent's turn-by-turn loop
+- **A.** Increasing `max_turns` until every agent fits in one conversation
+- **B.** Registering each agent as an MCP server so they can call one another
+- **C.** Nothing — subagent delegation is the only supported orchestration mechanism
+- **D.** The `Workflow` tool, which moves orchestration into a script executed outside the conversation's own context rather than inside the manager agent's turn-by-turn loop
 
 ### Q12
 
 Which third-party framework is characterized by Python-first type safety and schema validation, without heavy multi-agent orchestration machinery?
 
-A. Strands Agents
-B. PydanticAI
-C. LangGraph
-D. The Claude Agent SDK
+- **A.** Strands Agents
+- **B.** PydanticAI
+- **C.** LangGraph
+- **D.** The Claude Agent SDK
 
 ### Q13
 
 An exploratory agent reads dozens of files to answer one question, and the main conversation's context is filling up. Why does delegating the exploration to a subagent help, and what actually returns to the parent?
 
-A. The subagent runs against a larger context window reserved for delegated work, and returns its full transcript
-B. The subagent compresses every tool result automatically, returning a compacted version of each
-C. The subagent starts with a fresh context — no parent history, no accumulated tool output — and only its final response returns to the parent as a tool result
-D. Nothing returns to the parent; the subagent writes its findings to disk for the parent to read separately
+- **A.** The subagent runs against a larger context window reserved for delegated work, and returns its full transcript
+- **B.** The subagent compresses every tool result automatically, returning a compacted version of each
+- **C.** The subagent starts with a fresh context — no parent history, no accumulated tool output — and only its final response returns to the parent as a tool result
+- **D.** Nothing returns to the parent; the subagent writes its findings to disk for the parent to read separately
 
 ---
 

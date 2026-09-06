@@ -83,91 +83,91 @@ The reasoning: `--bare` skips auto-discovery of hooks, skills, plugins, MCP serv
 
 A developer wants Claude Code to investigate an unfamiliar codebase and propose an approach, with a guarantee that nothing is edited until they've read the proposal. Which mode, and what phase does it hold the session in?
 
-A. `default`, which gates edits but allows shell commands
-B. `dontAsk`, which auto-denies edits
-C. `plan`, which holds the session in the explore phase — reads and proposals only — until the plan is approved
-D. `acceptEdits`, which queues edits for later review
+- **A.** `default`, which gates edits but allows shell commands
+- **B.** `dontAsk`, which auto-denies edits
+- **C.** `plan`, which holds the session in the explore phase — reads and proposals only — until the plan is approved
+- **D.** `acceptEdits`, which queues edits for later review
 
 ### Q2
 
 Under `acceptEdits`, which of the following is auto-approved?
 
-A. Any shell command, as long as it isn't destructive
-B. Reads, file edits, and common filesystem commands like `mkdir` and `mv` **inside the working directory**
-C. Edits anywhere on the filesystem, including protected paths
-D. Nothing beyond reads; `acceptEdits` only removes prompts for read operations
+- **A.** Any shell command, as long as it isn't destructive
+- **B.** Reads, file edits, and common filesystem commands like `mkdir` and `mv` **inside the working directory**
+- **C.** Edits anywhere on the filesystem, including protected paths
+- **D.** Nothing beyond reads; `acceptEdits` only removes prompts for read operations
 
 ### Q3
 
 A team sets `dontAsk` on a developer's local session hoping to reduce prompt fatigue. What actually happens?
 
-A. Every action is approved automatically with no evaluation
-B. A classifier reviews each action and approves the safe ones
-C. Behavior is identical to `acceptEdits` but also covers shell commands
-D. Only pre-approved allow-listed tools and read-only commands run; everything else is auto-denied with no confirmation queue, which is why it's built for locked-down CI rather than local friction
+- **A.** Every action is approved automatically with no evaluation
+- **B.** A classifier reviews each action and approves the safe ones
+- **C.** Behavior is identical to `acceptEdits` but also covers shell commands
+- **D.** Only pre-approved allow-listed tools and read-only commands run; everything else is auto-denied with no confirmation queue, which is why it's built for locked-down CI rather than local friction
 
 ### Q4
 
 What distinguishes `auto` mode from `bypassPermissions`?
 
-A. `auto` has a classifier review each action, blocking production deploys and migrations, mass deletes, credential exfiltration, and force-push to main by default, while `bypassPermissions` skips evaluation entirely
-B. `auto` applies to reads only; `bypassPermissions` covers writes as well
-C. They are the same mechanism under two names, retained for backward compatibility
-D. `auto` requires an isolated container; `bypassPermissions` is safe on a workstation
+- **A.** `auto` has a classifier review each action, blocking production deploys and migrations, mass deletes, credential exfiltration, and force-push to main by default, while `bypassPermissions` skips evaluation entirely
+- **B.** `auto` applies to reads only; `bypassPermissions` covers writes as well
+- **C.** They are the same mechanism under two names, retained for backward compatibility
+- **D.** `auto` requires an isolated container; `bypassPermissions` is safe on a workstation
 
 ### Q5
 
 Which settings file carries allow/deny rules that should apply to everyone who clones a repository?
 
-A. `~/.claude/settings.json`
-B. `.claude/settings.json`, committed to the repo
-C. `.claude/settings.local.json`
-D. `managed-settings.json`
+- **A.** `~/.claude/settings.json`
+- **B.** `.claude/settings.json`, committed to the repo
+- **C.** `.claude/settings.local.json`
+- **D.** `managed-settings.json`
 
 ### Q6
 
 A project's CLAUDE.md has grown to 847 lines. It contains a correct instruction never to touch `/legacy/tokens/`, and the agent violates it anyway. What's the diagnosis?
 
-A. CLAUDE.md instructions are advisory and are never applied to path restrictions
-B. The instruction must be phrased as a shell glob to take effect
-C. Size is the failure mode: the rule is present but diluted, because a larger file makes any single instruction a smaller fraction of what loads — and a path restriction that must hold belongs in a hook, not only in prose
-D. CLAUDE.md is only loaded when explicitly referenced in a prompt
+- **A.** CLAUDE.md instructions are advisory and are never applied to path restrictions
+- **B.** The instruction must be phrased as a shell glob to take effect
+- **C.** Size is the failure mode: the rule is present but diluted, because a larger file makes any single instruction a smaller fraction of what loads — and a path restriction that must hold belongs in a hook, not only in prose
+- **D.** CLAUDE.md is only loaded when explicitly referenced in a prompt
 
 ### Q7
 
 A team puts a rules file at `.claude/rules/database/sql-conventions.md` with no `paths` field in its frontmatter, expecting it to apply only when Claude works in the database module. What actually happens?
 
-A. It loads unconditionally at the same priority as CLAUDE.md — scoping comes from the `paths` glob in frontmatter, not from directory placement
-B. It never loads, because a rules file without `paths` is invalid
-C. It loads only for files in `.claude/rules/database/`
-D. It loads only when the file is explicitly mentioned in the prompt
+- **A.** It loads unconditionally at the same priority as CLAUDE.md — scoping comes from the `paths` glob in frontmatter, not from directory placement
+- **B.** It never loads, because a rules file without `paths` is invalid
+- **C.** It loads only for files in `.claude/rules/database/`
+- **D.** It loads only when the file is explicitly mentioned in the prompt
 
 ### Q8
 
 A project's CLAUDE.md convention is being ignored specifically when work is delegated to the built-in `Explore` subagent. Why?
 
-A. Subagents receive CLAUDE.md but at lower priority than their own system prompt
-B. CLAUDE.md is only loaded for the first subagent spawned in a session
-C. Delegated tasks always require the convention to be repeated in the delegation prompt
-D. The built-in `Explore` and `Plan` subagents skip CLAUDE.md and git status entirely for speed, while `general-purpose` loads both
+- **A.** Subagents receive CLAUDE.md but at lower priority than their own system prompt
+- **B.** CLAUDE.md is only loaded for the first subagent spawned in a session
+- **C.** Delegated tasks always require the convention to be repeated in the delegation prompt
+- **D.** The built-in `Explore` and `Plan` subagents skip CLAUDE.md and git status entirely for speed, while `general-purpose` loads both
 
 ### Q9
 
 A CI pipeline runs `claude --bare -p "..."` and fails immediately with an authentication error, though the same command works interactively on a developer's machine. What's the likely cause?
 
-A. `--bare` is incompatible with `-p` and the flags must not be combined
-B. Headless mode requires `--output-format json` before authentication is attempted
-C. `--bare` trades away OAuth and keychain reads along with the rest of auto-discovery, so `ANTHROPIC_API_KEY` has to be supplied explicitly in the pipeline
-D. `--bare` requires a project-scoped `.claude/settings.json` to authenticate
+- **A.** `--bare` is incompatible with `-p` and the flags must not be combined
+- **B.** Headless mode requires `--output-format json` before authentication is attempted
+- **C.** `--bare` trades away OAuth and keychain reads along with the rest of auto-discovery, so `ANTHROPIC_API_KEY` has to be supplied explicitly in the pipeline
+- **D.** `--bare` requires a project-scoped `.claude/settings.json` to authenticate
 
 ### Q10
 
 A team has a release-checklist workflow that should run only when someone explicitly invokes it, never triggered automatically by description matching. How is that configured, and which format should it use?
 
-A. A skill with `disable-model-invocation: true` in its frontmatter — skills are the recommended format for both explicit and automatic invocation, and that flag makes it explicit-only
-B. A file in `.claude/commands/`, since only the legacy command format supports explicit-only invocation
-C. A `PreToolUse` hook, since only hooks can be triggered deterministically
-D. A subagent with an empty `description` field, so nothing can match it
+- **A.** A skill with `disable-model-invocation: true` in its frontmatter — skills are the recommended format for both explicit and automatic invocation, and that flag makes it explicit-only
+- **B.** A file in `.claude/commands/`, since only the legacy command format supports explicit-only invocation
+- **C.** A `PreToolUse` hook, since only hooks can be triggered deterministically
+- **D.** A subagent with an empty `description` field, so nothing can match it
 
 ---
 

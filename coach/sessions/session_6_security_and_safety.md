@@ -68,109 +68,109 @@ The reasoning: those three questions are residency, access logging, and managed 
 
 What is the underlying mechanism that makes prompt injection possible?
 
-A. Claude executes any code it finds in its context by default
-B. The model reads its entire context as one undifferentiated stream of tokens, with no structural marker separating a trusted system prompt from an instruction planted in retrieved content
-C. Tool results bypass the model's safety training
-D. System prompts are transmitted after user content, so ordering can be exploited
+- **A.** Claude executes any code it finds in its context by default
+- **B.** The model reads its entire context as one undifferentiated stream of tokens, with no structural marker separating a trusted system prompt from an instruction planted in retrieved content
+- **C.** Tool results bypass the model's safety training
+- **D.** System prompts are transmitted after user content, so ordering can be exploited
 
 ### Q2
 
 A team argues their agent is safe from prompt injection because every user is an authenticated internal employee. What's wrong with that reasoning?
 
-A. Nothing — authenticated internal users are the standard mitigation
-B. Internal users are the more likely attackers, statistically
-C. Authentication needs to be paired with rate limiting to be effective against injection
-D. The hostile instruction typically arrives through content the agent retrieves on the user's behalf — a shared document, a fetched page, a database record — not through the user's own prompt
+- **A.** Nothing — authenticated internal users are the standard mitigation
+- **B.** Internal users are the more likely attackers, statistically
+- **C.** Authentication needs to be paired with rate limiting to be effective against injection
+- **D.** The hostile instruction typically arrives through content the agent retrieves on the user's behalf — a shared document, a fetched page, a database record — not through the user's own prompt
 
 ### Q3
 
 A developer wraps retrieved documents in `<untrusted_content>` tags and adds a system-prompt line telling Claude to treat anything inside them as data. Is that sufficient, and why?
 
-A. No — it helps, but it remains a soft boundary the content itself can mimic or argue around; the reliable boundary is what the agent is allowed to *do* after reading it
-B. Yes — delimiter isolation is the documented complete defense for indirect injection
-C. No — delimiters have no effect at all and should be omitted
-D. Yes, provided the delimiters are randomly generated per request
+- **A.** No — it helps, but it remains a soft boundary the content itself can mimic or argue around; the reliable boundary is what the agent is allowed to *do* after reading it
+- **B.** Yes — delimiter isolation is the documented complete defense for indirect injection
+- **C.** No — delimiters have no effect at all and should be omitted
+- **D.** Yes, provided the delimiters are randomly generated per request
 
 ### Q4
 
 Three components — an API entry point, a Claude Code task that fetches an external page, and an MCP server reaching a customer system — each pass their own tests. A developer wires them together and the fetched page's content ends up as instructions in the next component's prompt. What was missing?
 
-A. An end-to-end test, which would have caught the injection automatically
-B. Component-level input validation, which each component skipped
-C. Seam-level controls: the trust boundary is where data moves between deployment environments, and each crossing needs content wrapped so the receiving component treats it as data — a component passing its own tests has no controls at that seam
-D. A more capable model in the middle component, better able to recognize injected instructions
+- **A.** An end-to-end test, which would have caught the injection automatically
+- **B.** Component-level input validation, which each component skipped
+- **C.** Seam-level controls: the trust boundary is where data moves between deployment environments, and each crossing needs content wrapped so the receiving component treats it as data — a component passing its own tests has no controls at that seam
+- **D.** A more capable model in the middle component, better able to recognize injected instructions
 
 ### Q5
 
 Why does the material insist least privilege applies to the whole application rather than component by component?
 
-A. Because per-component scoping isn't technically possible with IAM roles
-B. Because the application is only as contained as its most privileged seam — one over-scoped component becomes the weak point even when every other component is properly scoped
-C. Because component-level scoping doubles the audit burden with no security gain
-D. Because privileges are inherited downward from the entry point automatically
+- **A.** Because per-component scoping isn't technically possible with IAM roles
+- **B.** Because the application is only as contained as its most privileged seam — one over-scoped component becomes the weak point even when every other component is properly scoped
+- **C.** Because component-level scoping doubles the audit burden with no security gain
+- **D.** Because privileges are inherited downward from the entry point automatically
 
 ### Q6
 
 A team has `PreToolUse` hooks covering `write_file` and `delete_file` on protected paths. A reviewer asks what stops a steered agent from making an outbound call to an unreviewed endpoint. What's the answer the domain expects?
 
-A. Nothing is needed — a `PreToolUse` hook covers every tool call including network calls
-B. A stricter system prompt forbidding network access
-C. A `PostToolUse` hook that logs outbound calls after they complete
-D. OS-level sandboxing — filesystem and network isolation enforced by the OS rather than application logic, holding regardless of what any individual hook permits or misses
+- **A.** Nothing is needed — a `PreToolUse` hook covers every tool call including network calls
+- **B.** A stricter system prompt forbidding network access
+- **C.** A `PostToolUse` hook that logs outbound calls after they complete
+- **D.** OS-level sandboxing — filesystem and network isolation enforced by the OS rather than application logic, holding regardless of what any individual hook permits or misses
 
 ### Q7
 
 A regulated customer's reviewer asks the three questions this domain says to expect early. Which set is it?
 
-A. Model tier, token budget, and expected latency
-B. Prompt versioning, eval coverage, and rollback procedure
-C. Data residency, access logging, and whether an administrator can define and lock the rules centrally
-D. Encryption in transit, encryption at rest, and password rotation policy
+- **A.** Model tier, token budget, and expected latency
+- **B.** Prompt versioning, eval coverage, and rollback procedure
+- **C.** Data residency, access logging, and whether an administrator can define and lock the rules centrally
+- **D.** Encryption in transit, encryption at rest, and password rotation policy
 
 ### Q8
 
 Several rules apply to the same tool call: two allow rules, one ask rule, and one deny rule. What happens?
 
-A. The call is denied — precedence is deny > ask > allow, and a single deny blocks the action regardless of how many allow rules also match
-B. The user is prompted, because ask sits between the conflicting rules
-C. The call is allowed, because allow rules outnumber the deny
-D. The behavior depends on which scope each rule was defined in
+- **A.** The call is denied — precedence is deny > ask > allow, and a single deny blocks the action regardless of how many allow rules also match
+- **B.** The user is prompted, because ask sits between the conflicting rules
+- **C.** The call is allowed, because allow rules outnumber the deny
+- **D.** The behavior depends on which scope each rule was defined in
 
 ### Q9
 
 Why is a `PostToolUse` hook the right mechanism for a regulated customer's access log, rather than instructing the model to log its own actions?
 
-A. Because model-written logs are stored outside the customer's boundary
-B. Because a hook fires deterministically on every tool call, independent of what the model decides, whereas an instruction to self-log can be followed inconsistently
-C. Because `PostToolUse` hooks can block a call that fails to log
-D. Because the model has no access to the tool name or arguments it just used
+- **A.** Because model-written logs are stored outside the customer's boundary
+- **B.** Because a hook fires deterministically on every tool call, independent of what the model decides, whereas an instruction to self-log can be followed inconsistently
+- **C.** Because `PostToolUse` hooks can block a call that fails to log
+- **D.** Because the model has no access to the tool name or arguments it just used
 
 ### Q10
 
 A developer creates a new API key, copies it into a scratch file, and later loses the file. What's the situation?
 
-A. The key can be re-displayed from the console with account-owner approval
-B. The key is recoverable from the first API response that used it
-C. API keys are shown once at creation and cannot be retrieved again — the key has to be replaced, which is why capture into a secret store should happen immediately
-D. The key rotates automatically every 24 hours, so nothing is lost
+- **A.** The key can be re-displayed from the console with account-owner approval
+- **B.** The key is recoverable from the first API response that used it
+- **C.** API keys are shown once at creation and cannot be retrieved again — the key has to be replaced, which is why capture into a secret store should happen immediately
+- **D.** The key rotates automatically every 24 hours, so nothing is lost
 
 ### Q11
 
 Three services and two engineers all use the same third-party credential. Where should the value live, and why?
 
-A. In each service's committed configuration, so every consumer is documented in version control
-B. In a per-service environment variable set by each engineer locally
-C. Hardcoded in a shared library so there's exactly one copy in the codebase
-D. In a secret store — it's shared across services and people, so one rotation updates every consumer and reads are audit-logged
+- **A.** In each service's committed configuration, so every consumer is documented in version control
+- **B.** In a per-service environment variable set by each engineer locally
+- **C.** Hardcoded in a shared library so there's exactly one copy in the codebase
+- **D.** In a secret store — it's shared across services and people, so one rotation updates every consumer and reads are audit-logged
 
 ### Q12
 
 A `PreToolUse` hook blocks writes outside `/workspace/output`, and the agent's role denies `/etc`, `/secrets`, and `~/.aws`. Which additional protection does the material call out as equally important, and why?
 
-A. Protecting the agent's own auth and role configuration, because anything able to modify it can effectively act with that identity
-B. Encrypting the hook script on disk, so its logic can't be read by the agent
-C. Rotating the agent's credential after every session, since long-lived identities can't be scoped
-D. Removing the `PostToolUse` hook, since audit logs written by the agent's identity can be forged
+- **A.** Protecting the agent's own auth and role configuration, because anything able to modify it can effectively act with that identity
+- **B.** Encrypting the hook script on disk, so its logic can't be read by the agent
+- **C.** Rotating the agent's credential after every session, since long-lived identities can't be scoped
+- **D.** Removing the `PostToolUse` hook, since audit logs written by the agent's identity can be forged
 
 ---
 

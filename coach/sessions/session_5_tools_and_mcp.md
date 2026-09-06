@@ -91,109 +91,109 @@ The reasoning: permission rules can target `mcp__server__tool`, so an allow rule
 
 When Claude decides whether to call a tool, what does it actually read?
 
-A. The tool's implementation source, so behavior can be inferred from the code
-B. The tool's name only, which is why naming matters more than documentation
-C. The tool's name, description, and `input_schema` — never the implementation — plus whatever result you return
-D. The tool's most recent execution logs, to judge reliability
+- **A.** The tool's implementation source, so behavior can be inferred from the code
+- **B.** The tool's name only, which is why naming matters more than documentation
+- **C.** The tool's name, description, and `input_schema` — never the implementation — plus whatever result you return
+- **D.** The tool's most recent execution logs, to judge reliability
 
 ### Q2
 
 A developer marks every field in a tool's `input_schema` as `required`, reasoning that complete arguments produce better results. What actually happens?
 
-A. Claude fabricates values for fields it has no basis for, because the call can't be made without them
-B. The API rejects any request where a required field's value is uncertain
-C. Nothing changes; `required` is advisory metadata
-D. Claude stops calling the tool entirely and asks the user to fill in the fields
+- **A.** Claude fabricates values for fields it has no basis for, because the call can't be made without them
+- **B.** The API rejects any request where a required field's value is uncertain
+- **C.** Nothing changes; `required` is advisory metadata
+- **D.** Claude stops calling the tool entirely and asks the user to fill in the fields
 
 ### Q3
 
 An application appends an assistant turn containing a `tool_use` block, then sends the next request without a matching `tool_result`. What happens, and can prompting fix it?
 
-A. Claude re-issues the tool call automatically on the next turn
-B. The result is treated as empty, and Claude continues with degraded accuracy
-C. The request succeeds but the tool's output is dropped from context
-D. Request validation fails — a `tool_use` must be answered by a matching `tool_result` in the immediately following user turn, and no prompt-level instruction can recover from a structural mismatch
+- **A.** Claude re-issues the tool call automatically on the next turn
+- **B.** The result is treated as empty, and Claude continues with degraded accuracy
+- **C.** The request succeeds but the tool's output is dropped from context
+- **D.** Request validation fails — a `tool_use` must be answered by a matching `tool_result` in the immediately following user turn, and no prompt-level instruction can recover from a structural mismatch
 
 ### Q4
 
 An application using extended thinking summarizes each `thinking` block before appending it to history, to save tokens. Requests start being rejected. Why?
 
-A. Thinking blocks may only appear in the first turn of a conversation
-B. Thinking blocks carry a signature verifying they haven't been edited — any modification, including a summary, breaks it and the request is rejected
-C. Summarized thinking must be re-encoded as a `text` block, which the application didn't do
-D. Thinking blocks must be removed from history entirely, and keeping a summary is what fails
+- **A.** Thinking blocks may only appear in the first turn of a conversation
+- **B.** Thinking blocks carry a signature verifying they haven't been edited — any modification, including a summary, breaks it and the request is rejected
+- **C.** Summarized thinking must be re-encoded as a `text` block, which the application didn't do
+- **D.** Thinking blocks must be removed from history entirely, and keeping a summary is what fails
 
 ### Q5
 
 A workflow needs `get_customer_id` to run first, because `fetch_orders` takes that ID as its input. How should this be structured?
 
-A. Both tools in one turn, with Claude resolving the ordering internally
-B. Both in one turn with `readOnlyHint` set on the first, which forces it to complete first
-C. As separate turns — the second call can't be built correctly until the first result is back — or with `disable_parallel_tool_use` if the workflow requires strictly one call per turn
-D. As a single merged tool, since dependent calls are not supported
+- **A.** Both tools in one turn, with Claude resolving the ordering internally
+- **B.** Both in one turn with `readOnlyHint` set on the first, which forces it to complete first
+- **C.** As separate turns — the second call can't be built correctly until the first result is back — or with `disable_parallel_tool_use` if the workflow requires strictly one call per turn
+- **D.** As a single merged tool, since dependent calls are not supported
 
 ### Q6
 
 Three separate applications each need to query the same internal inventory service. What problem does building an MCP server solve here?
 
-A. The tool definition lives once in a standalone server that any MCP client can connect to and discover tools from, instead of the same integration being rebuilt and maintained in all three applications
-B. It reduces per-token cost by moving tool schemas out of the request
-C. It gives Claude direct database access without an intermediate service
-D. It is the only mechanism by which Claude can call an internal API
+- **A.** The tool definition lives once in a standalone server that any MCP client can connect to and discover tools from, instead of the same integration being rebuilt and maintained in all three applications
+- **B.** It reduces per-token cost by moving tool schemas out of the request
+- **C.** It gives Claude direct database access without an intermediate service
+- **D.** It is the only mechanism by which Claude can call an internal API
 
 ### Q7
 
 A team is deploying an MCP server that a whole team will reach over the network. Which transport, and what should they know about the alternatives?
 
-A. stdio, because it's the most widely supported
-B. SSE, because it's designed for shared remote servers
-C. Either stdio or SSE; the choice is a style preference
-D. HTTP — recommended for anything not local; stdio is for a local process on the same machine and can't be shared, and SSE is legacy and superseded
+- **A.** stdio, because it's the most widely supported
+- **B.** SSE, because it's designed for shared remote servers
+- **C.** Either stdio or SSE; the choice is a style preference
+- **D.** HTTP — recommended for anything not local; stdio is for a local process on the same machine and can't be shared, and SSE is legacy and superseded
 
 ### Q8
 
 A team commits a `.mcp.json` at the repo root registering an `npx`-launched stdio server, so the whole team picks it up on clone. Two teammates report it fails to start. What's the likely cause?
 
-A. `.mcp.json` only applies to the repository owner's machine
-B. A project-scoped stdio server still spawns a local subprocess on each teammate's machine, so every one of them needs the runtime installed — Node, in this case
-C. stdio servers cannot be registered at project scope at all
-D. The server must be re-registered per user in `~/.claude.json` before it will start anywhere
+- **A.** `.mcp.json` only applies to the repository owner's machine
+- **B.** A project-scoped stdio server still spawns a local subprocess on each teammate's machine, so every one of them needs the runtime installed — Node, in this case
+- **C.** stdio servers cannot be registered at project scope at all
+- **D.** The server must be re-registered per user in `~/.claude.json` before it will start anywhere
 
 ### Q9
 
 An internal expense application needs Claude to call one specific function — `submit_expense_line` — that exists only in that application and will never be reused elsewhere. Which mechanism fits?
 
-A. An MCP server, so the capability is available if another team ever needs it
-B. A Skill describing how to submit expense lines
-C. A custom tool defined with a schema in that application
-D. A built-in tool, since expense submission is a generic operation
+- **A.** An MCP server, so the capability is available if another team ever needs it
+- **B.** A Skill describing how to submit expense lines
+- **C.** A custom tool defined with a schema in that application
+- **D.** A built-in tool, since expense submission is a generic operation
 
 ### Q10
 
 A skill that works in Claude Code stops working when the same `SKILL.md` is sent with a Messages API request. Its steps shell out to a local validation script. Why does it break?
 
-A. On the Messages API the skill's steps run inside Anthropic's code-execution container, not on your machine, so a skill assuming local files and tools has nothing to reach
-B. Skills are not supported on the Messages API in any form
-C. The skill's frontmatter requires a `runtime` field that Claude Code sets automatically
-D. Messages API skills only execute if `disable-model-invocation` is set to false
+- **A.** On the Messages API the skill's steps run inside Anthropic's code-execution container, not on your machine, so a skill assuming local files and tools has nothing to reach
+- **B.** Skills are not supported on the Messages API in any form
+- **C.** The skill's frontmatter requires a `runtime` field that Claude Code sets automatically
+- **D.** Messages API skills only execute if `disable-model-invocation` is set to false
 
 ### Q11
 
 A production setup uses an MCP server for a live deployment system, two custom tools for app-specific functions, and a Skill encoding the team's release-review procedure. A reviewer asks whether the Skill makes the MCP server redundant. What's correct?
 
-A. Yes — a Skill can describe the same operations, so the MCP server duplicates it
-B. Yes, provided the Skill's description names the deployment system explicitly
-C. No, but only because Skills can't run in Claude Code alongside MCP servers
-D. No — MCP connects Claude to the data and actions, Skills teach Claude what to do with them, and the layers are additive; a Skill saying "look up deployment status" can't itself reach the deployment system
+- **A.** Yes — a Skill can describe the same operations, so the MCP server duplicates it
+- **B.** Yes, provided the Skill's description names the deployment system explicitly
+- **C.** No, but only because Skills can't run in Claude Code alongside MCP servers
+- **D.** No — MCP connects Claude to the data and actions, Skills teach Claude what to do with them, and the layers are additive; a Skill saying "look up deployment status" can't itself reach the deployment system
 
 ### Q12
 
 An MCP server has a broad server-level allow rule, and a separate deny rule targeting `mcp__deploy__delete_environment`. What happens when Claude tries to call that specific tool?
 
-A. The allow rule wins, because server-level rules take precedence over tool-level ones
-B. The call is denied — a deny on one tool overrides an allow covering the whole server
-C. The rules cancel out and the user is prompted for approval
-D. The configuration is invalid and the server fails to load
+- **A.** The allow rule wins, because server-level rules take precedence over tool-level ones
+- **B.** The call is denied — a deny on one tool overrides an allow covering the whole server
+- **C.** The rules cancel out and the user is prompted for approval
+- **D.** The configuration is invalid and the server fails to load
 
 ---
 

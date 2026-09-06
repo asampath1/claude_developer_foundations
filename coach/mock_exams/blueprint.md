@@ -47,6 +47,19 @@ Each exam targets roughly:
 | Medium | ~45% | A short scenario where you apply one rule, or distinguish two adjacent mechanisms |
 | Hard | ~25% | Multi-step scenarios: a constraint that overrides the obvious answer, a misdiagnosis to see through, JSON/schema or tool-call structure to reason about, or two plausible answers separated by one detail |
 
+## Option formatting
+
+Answer options are written as a Markdown list, one per line:
+
+```markdown
+- **A.** first option
+- **B.** second option
+```
+
+Bare `A.` lines get folded into a single paragraph by every Markdown renderer, so the four options arrive as one run-on line in preview and in PDF export. Any new question file follows the list form.
+
+---
+
 ## No-repetition rule
 
 - No question stem, scenario, or answer set repeats across the four mock exams.

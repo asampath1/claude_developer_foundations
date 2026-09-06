@@ -85,127 +85,127 @@ The reasoning: async fan-out is a real option and will finish sooner, but it pay
 
 A team estimates whether a request will fit the context window by counting the user's message plus the expected reply. Their long-running sessions keep overflowing anyway. What are they failing to count?
 
-A. Only the conversation history, which is the sole additional consumer
-B. Nothing — the window applies to input only, so their method is sound
-C. The response, which is billed but does not occupy the window
-D. The system prompt, the full conversation history, every tool definition, every tool result, and injected documents — all of it draws from the same shared budget
+- **A.** Only the conversation history, which is the sole additional consumer
+- **B.** Nothing — the window applies to input only, so their method is sound
+- **C.** The response, which is billed but does not occupy the window
+- **D.** The system prompt, the full conversation history, every tool definition, every tool result, and injected documents — all of it draws from the same shared budget
 
 ### Q2
 
 A request is accepted and the model begins generating, then stops partway through with a partial response. What stop reason indicates the generation hit the context ceiling, and how does this differ from an oversized input?
 
-A. `max_tokens` — identical to the oversized-input case, which also returns a partial response
-B. `refusal` — the model declined to continue once the window filled
-C. `model_context_window_exceeded` — the request was valid on submission, so you get partial output rather than the up-front validation error an oversized input triggers
-D. There is no distinct stop reason; the connection is closed without one
+- **A.** `max_tokens` — identical to the oversized-input case, which also returns a partial response
+- **B.** `refusal` — the model declined to continue once the window filled
+- **C.** `model_context_window_exceeded` — the request was valid on submission, so you get partial output rather than the up-front validation error an oversized input triggers
+- **D.** There is no distinct stop reason; the connection is closed without one
 
 ### Q3
 
 A team migrates a classification service to Sonnet 5 and keeps `temperature: 0.2` in the request, which worked on their previous model. What happens, and what's the correct approach?
 
-A. A 400 error — the newest models don't accept non-default sampling parameters, and output is steered through prompting instead
-B. The parameter is silently ignored and output is unchanged
-C. It works normally; temperature support is unchanged across all Claude generations
-D. The request succeeds but output becomes fully deterministic, since 0.2 rounds to 0
+- **A.** A 400 error — the newest models don't accept non-default sampling parameters, and output is steered through prompting instead
+- **B.** The parameter is silently ignored and output is unchanged
+- **C.** It works normally; temperature support is unchanged across all Claude generations
+- **D.** The request succeeds but output becomes fully deterministic, since 0.2 rounds to 0
 
 ### Q4
 
 Which statement about few-shot examples is correct?
 
-A. They fine-tune the model on your data for the duration of the session
-B. They live in the prompt and cost tokens on every call, which makes shot count a quality/cost tradeoff rather than a free improvement
-C. They are cached automatically and therefore cost nothing after the first request
-D. They are only supported on models with adaptive thinking
+- **A.** They fine-tune the model on your data for the duration of the session
+- **B.** They live in the prompt and cost tokens on every call, which makes shot count a quality/cost tradeoff rather than a free improvement
+- **C.** They are cached automatically and therefore cost nothing after the first request
+- **D.** They are only supported on models with adaptive thinking
 
 ### Q5
 
 A team runs a document-tagging task on a top-tier model with a zero-shot prompt because a smaller model produced inconsistent output shapes. Cost is now a problem. What does the material suggest trying?
 
-A. Nothing — output shape is a capability property, so the top tier is required
-B. Raising `temperature` on the smaller model to widen its output distribution
-C. Removing the output-format instruction so the smaller model has less to follow
-D. Adding a few examples to the smaller model's prompt: examples can pin the structure a description keeps missing, which is often what lets a cheaper tier clear the bar
+- **A.** Nothing — output shape is a capability property, so the top tier is required
+- **B.** Raising `temperature` on the smaller model to widen its output distribution
+- **C.** Removing the output-format instruction so the smaller model has less to follow
+- **D.** Adding a few examples to the smaller model's prompt: examples can pin the structure a description keeps missing, which is often what lets a cheaper tier clear the bar
 
 ### Q6
 
 What is the relationship between an official Anthropic SDK and the REST API?
 
-A. The SDK is a thin convenience layer over the same REST API, handling auth, request construction, retries, and parsing — same endpoint, same model
-B. The SDK connects over a persistent websocket while REST is request/response
-C. The SDK routes to a different, SDK-optimized model deployment
-D. The SDK is required for tool use; raw REST supports text completion only
+- **A.** The SDK is a thin convenience layer over the same REST API, handling auth, request construction, retries, and parsing — same endpoint, same model
+- **B.** The SDK connects over a persistent websocket while REST is request/response
+- **C.** The SDK routes to a different, SDK-optimized model deployment
+- **D.** The SDK is required for tool use; raw REST supports text completion only
 
 ### Q7
 
 A user-facing assistant returns long answers and users complain about staring at a blank screen. Which request pattern addresses this, and how does it work?
 
-A. The Message Batches API, which returns results as they complete
-B. The async client, which reduces time-to-first-token
-C. Streaming, which delivers the response in pieces over the same HTTP connection via server-sent events, with your code reassembling them
-D. Synchronous calls with a lower `max_tokens`, since shorter answers arrive sooner
+- **A.** The Message Batches API, which returns results as they complete
+- **B.** The async client, which reduces time-to-first-token
+- **C.** Streaming, which delivers the response in pieces over the same HTTP connection via server-sent events, with your code reassembling them
+- **D.** Synchronous calls with a lower `max_tokens`, since shorter answers arrive sooner
 
 ### Q8
 
 A TypeScript team asks which import gives them the async client, having seen `AsyncAnthropic` in a Python example. What's the answer?
 
-A. `AsyncAnthropic` is exported from the TypeScript SDK under the same name
-B. There is no separate async client class — the standard TypeScript client is already Promise-based, so you just `await` calls
-C. TypeScript requires the REST API directly for concurrent calls
-D. Async support in TypeScript requires enabling a beta header
+- **A.** `AsyncAnthropic` is exported from the TypeScript SDK under the same name
+- **B.** There is no separate async client class — the standard TypeScript client is already Promise-based, so you just `await` calls
+- **C.** TypeScript requires the REST API directly for concurrent calls
+- **D.** Async support in TypeScript requires enabling a beta header
 
 ### Q9
 
 A nightly job grades 3,000 eval cases. Results are needed by morning and cost is the main concern. A developer proposes fanning the calls out concurrently with the async client. What's the correct assessment?
 
-A. Async fan-out is correct — concurrency is the standard way to reduce bulk-processing cost
-B. Neither works; eval runs must be executed synchronously to preserve case ordering
-C. Async fan-out is correct because batch submissions can't return structured results
-D. Async fan-out finishes sooner but pays full per-token price; the workload is latency-tolerant with nobody waiting, which is exactly the Message Batches API's design point — up to 24 hours at a lower per-token rate
+- **A.** Async fan-out is correct — concurrency is the standard way to reduce bulk-processing cost
+- **B.** Neither works; eval runs must be executed synchronously to preserve case ordering
+- **C.** Async fan-out is correct because batch submissions can't return structured results
+- **D.** Async fan-out finishes sooner but pays full per-token price; the workload is latency-tolerant with nobody waiting, which is exactly the Message Batches API's design point — up to 24 hours at a lower per-token rate
 
 ### Q10
 
 A team's standing policy is to use the most capable available model everywhere "so quality is never the problem." How does the material characterize this?
 
-A. Correct practice — capability headroom is the cheapest insurance against quality complaints
-B. Acceptable only for customer-facing features, and wasteful for internal ones
-C. The most common and most expensive model-selection mistake in production: start at Sonnet, move up only when an eval shows the quality bar isn't met, and move down when an eval shows the drop is acceptable
-D. Irrelevant, since per-token pricing is broadly aligned across tiers
+- **A.** Correct practice — capability headroom is the cheapest insurance against quality complaints
+- **B.** Acceptable only for customer-facing features, and wasteful for internal ones
+- **C.** The most common and most expensive model-selection mistake in production: start at Sonnet, move up only when an eval shows the quality bar isn't met, and move down when an eval shows the drop is acceptable
+- **D.** Irrelevant, since per-token pricing is broadly aligned across tiers
 
 ### Q11
 
 Reasoning depth on adaptive-thinking models is tuned with `effort`. Which description matches the documented levels?
 
-A. Five levels — `low` for lookups and listing, `medium` for routine edits, `high` for thorough analysis such as refactors and debugging, `xhigh` for extended depth on complex coding, `max` for multi-step problems needing the deepest analysis
-B. Three levels — `off`, `on`, and `max` — with `on` as the universal default
-C. A numeric scale from 1 to 5, each level mapping to a fixed reasoning token budget
-D. A single boolean flag, since depth is decided entirely by the model on adaptive-thinking tiers
+- **A.** Five levels — `low` for lookups and listing, `medium` for routine edits, `high` for thorough analysis such as refactors and debugging, `xhigh` for extended depth on complex coding, `max` for multi-step problems needing the deepest analysis
+- **B.** Three levels — `off`, `on`, and `max` — with `on` as the universal default
+- **C.** A numeric scale from 1 to 5, each level mapping to a fixed reasoning token budget
+- **D.** A single boolean flag, since depth is decided entirely by the model on adaptive-thinking tiers
 
 ### Q12
 
 A team sets a `cache_control` breakpoint on a 400-token system prompt and sees no cache hits at all. Why?
 
-A. Breakpoints only work on tool definitions, never on system prompts
-B. Caching applies only above a minimum token threshold — around 1,024 tokens on current models — so a short prompt won't cache even with a breakpoint set
-C. The system prompt must be the last block in the request to be cacheable
-D. Cache hits only register after the tenth identical request
+- **A.** Breakpoints only work on tool definitions, never on system prompts
+- **B.** Caching applies only above a minimum token threshold — around 1,024 tokens on current models — so a short prompt won't cache even with a breakpoint set
+- **C.** The system prompt must be the last block in the request to be cacheable
+- **D.** Cache hits only register after the tenth identical request
 
 ### Q13
 
 After enabling prompt caching, a team's bill goes up. Their traffic is a large volume of one-off requests, each with a different long document placed before the breakpoint. What happened?
 
-A. Cache reads are billed at a premium over standard input tokens
-B. Caching increases token counts because the API adds a describing system prompt
-C. Enabling caching disabled their existing batch discount
-D. Every request wrote a fresh cache entry that was never read again — writes cost more than base input, and the economics only work when reads outnumber writes
+- **A.** Cache reads are billed at a premium over standard input tokens
+- **B.** Caching increases token counts because the API adds a describing system prompt
+- **C.** Enabling caching disabled their existing batch discount
+- **D.** Every request wrote a fresh cache entry that was never read again — writes cost more than base input, and the economics only work when reads outnumber writes
 
 ### Q14
 
 A cost model sums the `usage` block's input tokens into a single "input" line. What does this get wrong once caching is in play?
 
-A. Nothing — cached and uncached input tokens are billed identically
-B. Output tokens would be double-counted in the same total
-C. Cache writes, cache reads, and regular input tokens are priced differently, so a single input total misstates cost — they have to be tracked separately
-D. Usage data isn't available per request, so cost can only be reconciled from the monthly invoice
+- **A.** Nothing — cached and uncached input tokens are billed identically
+- **B.** Output tokens would be double-counted in the same total
+- **C.** Cache writes, cache reads, and regular input tokens are priced differently, so a single input total misstates cost — they have to be tracked separately
+- **D.** Usage data isn't available per request, so cost can only be reconciled from the monthly invoice
 
 ---
 

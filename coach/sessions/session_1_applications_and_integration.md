@@ -85,136 +85,136 @@ The reasoning: nothing about the model changed. CLAUDE.md is a Claude Code mecha
 
 A stakeholder's brief for a claims-triage assistant contains the four statements below. Which one is an **infrastructure** requirement rather than a functional one?
 
-A. Every claim is classified into one of five handling queues
-B. The assistant drafts a response citing the specific policy clause it relied on
-C. Claim documents must be processed within the customer's approved geographic region
-D. No response is sent to a claimant without an adjuster approving it
+- **A.** Every claim is classified into one of five handling queues
+- **B.** The assistant drafts a response citing the specific policy clause it relied on
+- **C.** Claim documents must be processed within the customer's approved geographic region
+- **D.** No response is sent to a claimant without an adjuster approving it
 
 ### Q2
 
 A business sponsor says: "we need our support agents to answer faster." A developer immediately begins comparing deployment platforms based on which one the team has shipped on before. What has been skipped?
 
-A. Nothing — platform choice is correctly made first, since it constrains everything downstream
-B. A model-tier benchmark comparing Haiku, Sonnet, and Opus on sample tickets
-C. An eval suite, which must exist before any requirement can be written
-D. Deriving checkable functional requirements from the goal, and the latency, scale, residency, and identity constraints it implies
+- **A.** Nothing — platform choice is correctly made first, since it constrains everything downstream
+- **B.** A model-tier benchmark comparing Haiku, Sonnet, and Opus on sample tickets
+- **C.** An eval suite, which must exist before any requirement can be written
+- **D.** Deriving checkable functional requirements from the goal, and the latency, scale, residency, and identity constraints it implies
 
 ### Q3
 
 A team completes its build and reaches the customer's security review, where a reviewer asks where claim data is processed. The chosen platform doesn't satisfy the customer's residency requirement, and the integration has to be rebuilt elsewhere. Per the lifecycle gate discipline, what went wrong?
 
-A. The eval suite should have included a residency test case
-B. The residency constraint belonged in the requirements phase, and the design → build gate should have refused to open until the chosen platform satisfied it
-C. Nothing was avoidable — residency constraints can only be confirmed by the customer's own security team at review time
-D. The team should have deployed to every candidate platform and let the reviewer choose
+- **A.** The eval suite should have included a residency test case
+- **B.** The residency constraint belonged in the requirements phase, and the design → build gate should have refused to open until the chosen platform satisfied it
+- **C.** Nothing was avoidable — residency constraints can only be confirmed by the customer's own security team at review time
+- **D.** The team should have deployed to every candidate platform and let the reviewer choose
 
 ### Q4
 
 Which sequence matches the systems lifecycle phases a Claude application moves through?
 
-A. Requirements → design → build → test → deploy → operate → iterate
-B. Design → requirements → build → deploy → test → iterate → operate
-C. Requirements → build → test → design → deploy → operate → iterate
-D. Build → test → requirements → design → deploy → iterate → operate
+- **A.** Requirements → design → build → test → deploy → operate → iterate
+- **B.** Design → requirements → build → deploy → test → iterate → operate
+- **C.** Requirements → build → test → design → deploy → operate → iterate
+- **D.** Build → test → requirements → design → deploy → iterate → operate
 
 ### Q5
 
 Your multi-turn application sends a conversation to the Messages API. What is true about where that conversation lives?
 
-A. Anthropic stores the conversation server-side and your application references it by session ID
-B. The API keeps the last ten turns and your application supplies anything older
-C. Conversation state is held in the model's context between requests as long as the same API key is used
-D. The API is stateless per request — your application owns the conversation and resends the whole growing array each turn
+- **A.** Anthropic stores the conversation server-side and your application references it by session ID
+- **B.** The API keeps the last ten turns and your application supplies anything older
+- **C.** Conversation state is held in the model's context between requests as long as the same API key is used
+- **D.** The API is stateless per request — your application owns the conversation and resends the whole growing array each turn
 
 ### Q6
 
 An application streams a response that may contain tool calls. At which point is it safe to execute a requested tool?
 
-A. As soon as a `content_block_start` event announces a `tool_use` block, since the tool name is known by then
-B. After the first `input_json_delta` arrives, since the remaining deltas only add optional arguments
-C. Only after the stream closes and the block's accumulated `input_json` has been fully reassembled and parsed
-D. Streaming responses cannot contain tool calls, so the question doesn't arise
+- **A.** As soon as a `content_block_start` event announces a `tool_use` block, since the tool name is known by then
+- **B.** After the first `input_json_delta` arrives, since the remaining deltas only add optional arguments
+- **C.** Only after the stream closes and the block's accumulated `input_json` has been fully reassembled and parsed
+- **D.** Streaming responses cannot contain tool calls, so the question doesn't arise
 
 ### Q7
 
 A team needs Claude to read a 40-page contract PDF. How is that content supplied?
 
-A. As a `document` content block, with the same `base64`/`url`/`file_id` source pattern used for images
-B. As an `image` content block, with `media_type` set to `application/pdf`
-C. As plain text in the `system` prompt after extracting it client-side, since PDFs aren't supported
-D. As a `tool_result` block, because file content can only enter context through a tool
+- **A.** As a `document` content block, with the same `base64`/`url`/`file_id` source pattern used for images
+- **B.** As an `image` content block, with `media_type` set to `application/pdf`
+- **C.** As plain text in the `system` prompt after extracting it client-side, since PDFs aren't supported
+- **D.** As a `tool_result` block, because file content can only enter context through a tool
 
 ### Q8
 
 A pipeline sends one 1,400 × 900 pixel screenshot per request. Roughly how many visual tokens does that image consume, and what should the team do with the number?
 
-A. About 450 tokens — negligible, so no action needed
-B. About 1,650 tokens — measure a typical production image against the context budget at design time, since a resize is cheap before deployment and expensive after
-C. Exactly 1,000 tokens for any image, since images are billed at a flat rate
-D. Image tokens are not counted against the context window, only against the response budget
+- **A.** About 450 tokens — negligible, so no action needed
+- **B.** About 1,650 tokens — measure a typical production image against the context budget at design time, since a resize is cheap before deployment and expensive after
+- **C.** Exactly 1,000 tokens for any image, since images are billed at a flat rate
+- **D.** Image tokens are not counted against the context window, only against the response budget
 
 ### Q9
 
 A backend service fans out 200 independent Claude requests using the Python SDK's `AsyncAnthropic` client. What does that buy?
 
-A. Lower per-request latency, because async requests are prioritized by the API
-B. A lower per-token cost, because concurrent requests are billed as a batch
-C. Concurrency — the application handles other work while requests are in flight — but each individual request takes just as long as it would synchronously
-D. Nothing, because the Python SDK is synchronous only and the TypeScript SDK must be used for concurrency
+- **A.** Lower per-request latency, because async requests are prioritized by the API
+- **B.** A lower per-token cost, because concurrent requests are billed as a batch
+- **C.** Concurrency — the application handles other work while requests are in flight — but each individual request takes just as long as it would synchronously
+- **D.** Nothing, because the Python SDK is synchronous only and the TypeScript SDK must be used for concurrency
 
 ### Q10
 
 Which of the following is an example of **large-scale** refactoring in a Claude application, as the domain distinguishes it from small-scale refactoring?
 
-A. Tightening a vague tool description so Claude stops calling the wrong tool
-B. Splitting one over-broad tool into two narrower ones
-C. Renaming a few variables in the request-construction helper
-D. Migrating a workflow architecture to an agent architecture because requirements shifted from predictable to open-ended
+- **A.** Tightening a vague tool description so Claude stops calling the wrong tool
+- **B.** Splitting one over-broad tool into two narrower ones
+- **C.** Renaming a few variables in the request-construction helper
+- **D.** Migrating a workflow architecture to an agent architecture because requirements shifted from predictable to open-ended
 
 ### Q11
 
 A prompt was developed and refined inside a claude.ai Project, where a project-level instruction set kept Claude's tone and output format consistent. The team now rebuilds the same feature as a backend service against the SDK. What has to change?
 
-A. Nothing — Project instructions are stored on the account and apply to API traffic from the same organization
-B. The Project instructions have to be re-expressed as an explicit `system` prompt the application sends on every request, since API persistence is entirely the application's responsibility
-C. The Project must be exported to a CLAUDE.md file, which the SDK discovers automatically
-D. The feature must stay on claude.ai, because output-format consistency isn't achievable over the API
+- **A.** Nothing — Project instructions are stored on the account and apply to API traffic from the same organization
+- **B.** The Project instructions have to be re-expressed as an explicit `system` prompt the application sends on every request, since API persistence is entirely the application's responsibility
+- **C.** The Project must be exported to a CLAUDE.md file, which the SDK discovers automatically
+- **D.** The feature must stay on claude.ai, because output-format consistency isn't achievable over the API
 
 ### Q12
 
 An application retrieves supplier documents and passes them to Claude alongside the user's own question. When should the team decide which of those two content streams Claude is allowed to treat as instruction-bearing?
 
-A. When the message flow is architected, as a design decision about content boundaries
-B. After the first incident, when there's evidence about which documents are actually risky
-C. At the security review, since content boundaries are a compliance artifact rather than a design one
-D. Never explicitly — the model distinguishes retrieved content from user instructions on its own
+- **A.** When the message flow is architected, as a design decision about content boundaries
+- **B.** After the first incident, when there's evidence about which documents are actually risky
+- **C.** At the security review, since content boundaries are a compliance artifact rather than a design one
+- **D.** Never explicitly — the model distinguishes retrieved content from user instructions on its own
 
 ### Q13
 
 A team has built a set of skills, hooks, and subagents that three separate project repositories all need. Currently each repo has its own copy in `.claude/`. What does the plugin/marketplace distinction offer here?
 
-A. Nothing — `.claude/` directory contents cannot be shared between repositories by any mechanism
-B. Copying the `.claude/` directory into a shared git submodule is the only supported sharing mechanism
-C. Bundling the components as a plugin makes them one installable, versioned unit, and publishing it through a marketplace lets every project install it — leaving genuinely project-local settings in each repo's own configuration
-D. Registering each skill individually with the Messages API, after which all three repos inherit them automatically
+- **A.** Nothing — `.claude/` directory contents cannot be shared between repositories by any mechanism
+- **B.** Copying the `.claude/` directory into a shared git submodule is the only supported sharing mechanism
+- **C.** Bundling the components as a plugin makes them one installable, versioned unit, and publishing it through a marketplace lets every project install it — leaving genuinely project-local settings in each repo's own configuration
+- **D.** Registering each skill individually with the Messages API, after which all three repos inherit them automatically
 
 ### Q14
 
 An organization's IT team needs a tool-permission rule that no individual developer can weaken on their own machine. Which configuration scope achieves that?
 
-A. The project-scoped `.claude/settings.json`, because it's committed and reviewed
-B. The user-scoped `~/.claude/settings.json`, because it applies to every project on the machine
-C. The local `.claude/settings.local.json`, because gitignored files can't be edited by tooling
-D. Enterprise/managed settings, which sit above every other scope and cannot be overridden by user or project files
+- **A.** The project-scoped `.claude/settings.json`, because it's committed and reviewed
+- **B.** The user-scoped `~/.claude/settings.json`, because it applies to every project on the machine
+- **C.** The local `.claude/settings.local.json`, because gitignored files can't be edited by tooling
+- **D.** Enterprise/managed settings, which sit above every other scope and cannot be overridden by user or project files
 
 ### Q15
 
 A production deployment pins `claude-haiku-4-5-20251001`. A teammate argues that newer Claude 4.6-generation IDs "aren't really pinned" because they carry no date suffix. What's correct?
 
-A. From the 4.6 generation onward the model ID alone identifies a fixed snapshot — the format changed, the pinning didn't
-B. The teammate is right: dateless IDs behave as aliases and resolve to the current recommended version
-C. Dateless IDs are only valid on Bedrock and Vertex, not on the first-party API
-D. Pinning stopped being necessary from 4.6 onward because behavior is now guaranteed stable across versions
+- **A.** From the 4.6 generation onward the model ID alone identifies a fixed snapshot — the format changed, the pinning didn't
+- **B.** The teammate is right: dateless IDs behave as aliases and resolve to the current recommended version
+- **C.** Dateless IDs are only valid on Bedrock and Vertex, not on the first-party API
+- **D.** Pinning stopped being necessary from 4.6 onward because behavior is now guaranteed stable across versions
 
 ---
 

@@ -82,109 +82,109 @@ The reasoning: a prompt-level "return only JSON" instruction holds on tested cas
 
 How does the material distinguish context engineering from prompt engineering?
 
-A. They're synonyms; context engineering is the newer term
-B. Prompt engineering is about what you say; context engineering is the superset — curating the full set of tokens available at each inference call, including history, tool definitions, and tool outputs
-C. Prompt engineering applies to the API; context engineering applies only to Claude Code
-D. Context engineering concerns the system prompt specifically, and prompt engineering the user turn
+- **A.** They're synonyms; context engineering is the newer term
+- **B.** Prompt engineering is about what you say; context engineering is the superset — curating the full set of tokens available at each inference call, including history, tool definitions, and tool outputs
+- **C.** Prompt engineering applies to the API; context engineering applies only to Claude Code
+- **D.** Context engineering concerns the system prompt specifically, and prompt engineering the user turn
 
 ### Q2
 
 A long-running agent's context is dominated by many turns of dialogue and intermediate reasoning that can't be regenerated cheaply, and the window is nearly full. Which technique applies, and what should happen first?
 
-A. Pruning the dialogue, which is lossless and requires no LLM call
-B. Starting a fresh session, since dialogue history can't be condensed
-C. Raising `max_tokens` so the model has more room to work with
-D. Compaction — summarizing older history into a condensed form via an LLM call — with a `PreCompact` hook archiving the full transcript before it's summarized away
+- **A.** Pruning the dialogue, which is lossless and requires no LLM call
+- **B.** Starting a fresh session, since dialogue history can't be condensed
+- **C.** Raising `max_tokens` so the model has more room to work with
+- **D.** Compaction — summarizing older history into a condensed form via an LLM call — with a `PreCompact` hook archiving the full transcript before it's summarized away
 
 ### Q3
 
 An agent's tool selection is reliably fine for the first several turns and degrades from roughly turn 8 onward in production, though it never did in development. What should be checked before rewriting the tool schemas?
 
-A. Whether accumulated, never-pruned tool output has filled the window and crowded out the system prompt and early instructions
-B. Whether the model version was silently upgraded mid-session
-C. Whether `temperature` drifted upward across turns
-D. Whether the tools were registered in a different order in production
+- **A.** Whether accumulated, never-pruned tool output has filled the window and crowded out the system prompt and early instructions
+- **B.** Whether the model version was silently upgraded mid-session
+- **C.** Whether `temperature` drifted upward across turns
+- **D.** Whether the tools were registered in a different order in production
 
 ### Q4
 
 A team keeps a must-not-violate path restriction in the first message of every Claude Code session. It's occasionally ignored in long sessions. Where should the rule live, and why?
 
-A. In a `PostToolUse` hook, since that's the only enforcement point available
-B. Repeated in every user turn, so it's always the most recent instruction
-C. In CLAUDE.md, which is re-injected every request — compaction can summarize away specific instructions given early in a session
-D. Nowhere different; the rule should simply be worded more forcefully
+- **A.** In a `PostToolUse` hook, since that's the only enforcement point available
+- **B.** Repeated in every user turn, so it's always the most recent instruction
+- **C.** In CLAUDE.md, which is re-injected every request — compaction can summarize away specific instructions given early in a session
+- **D.** Nowhere different; the rule should simply be worded more forcefully
 
 ### Q5
 
 A support assistant answers the first few turns exactly as specified, then gradually widens its scope, adopts a different tone, and starts answering adjacent questions it wasn't asked. Which technique is missing?
 
-A. Few-shot examples showing the desired answer shape
-B. Structured outputs with a JSON schema
-C. A constraint covering the edge-case inputs
-D. A system prompt, or a more specific one — the behavioral contract was too vague to hold across turns
+- **A.** Few-shot examples showing the desired answer shape
+- **B.** Structured outputs with a JSON schema
+- **C.** A constraint covering the edge-case inputs
+- **D.** A system prompt, or a more specific one — the behavioral contract was too vague to hold across turns
 
 ### Q6
 
 Claude performs the requested extraction correctly, but returns it in a structure the team never specified and didn't want. Which technique addresses this most directly?
 
-A. Few-shot examples — a description alone can't pin down an exact structure, but an example shows it
-B. A longer system prompt restating the task
-C. Raising the effort level so the model reasons more about formatting
-D. Switching to a more capable model tier
+- **A.** Few-shot examples — a description alone can't pin down an exact structure, but an example shows it
+- **B.** A longer system prompt restating the task
+- **C.** Raising the effort level so the model reasons more about formatting
+- **D.** Switching to a more capable model tier
 
 ### Q7
 
 In the worked classification pattern, few-shot examples are wrapped in XML tags. What job do the tags do?
 
-A. They compress the examples so they cost fewer tokens
-B. They mark where each example starts and ends, so Claude doesn't read the examples as part of the live instruction
-C. They are required syntax for any prompt containing more than one example
-D. They enable constrained decoding against the label set
+- **A.** They compress the examples so they cost fewer tokens
+- **B.** They mark where each example starts and ends, so Claude doesn't read the examples as part of the live instruction
+- **C.** They are required syntax for any prompt containing more than one example
+- **D.** They enable constrained decoding against the label set
 
 ### Q8
 
 A team's prompt does one thing: summarize a paragraph in two sentences. A reviewer suggests adding a system prompt, XML structure, few-shot examples, and an output schema, on the grounds that the worked pattern used all four. What's the correct assessment?
 
-A. Correct — the four techniques should always be applied together for consistency
-B. Correct, provided the eval score improves at all
-C. Over-engineering — stacking is for a clearly-defined output contract with edge cases few-shot can cover; a simple summarization task doesn't need an output schema and worked examples
-D. Incorrect for a different reason: summarization tasks can't use system prompts
+- **A.** Correct — the four techniques should always be applied together for consistency
+- **B.** Correct, provided the eval score improves at all
+- **C.** Over-engineering — stacking is for a clearly-defined output contract with edge cases few-shot can cover; a simple summarization task doesn't need an output schema and worked examples
+- **D.** Incorrect for a different reason: summarization tasks can't use system prompts
 
 ### Q9
 
 What makes structured outputs a stronger guarantee than a prompt instruction to "respond only with JSON"?
 
-A. Constrained decoding: the model is restricted token by token to emissions that keep the output valid against the schema, so an invalid response can't be generated
-B. The API retries internally until a response parses, up to a fixed attempt count
-C. The schema is appended to the system prompt with elevated priority
-D. Responses are validated after generation and regenerated if they fail
+- **A.** Constrained decoding: the model is restricted token by token to emissions that keep the output valid against the schema, so an invalid response can't be generated
+- **B.** The API retries internally until a response parses, up to a fixed attempt count
+- **C.** The schema is appended to the system prompt with elevated priority
+- **D.** Responses are validated after generation and regenerated if they fail
 
 ### Q10
 
 An agentic loop crashes intermittently when Claude passes a malformed argument to a tool. Which mechanism targets this specifically?
 
-A. JSON outputs via `output_config.format`, which constrains the final response
-B. Message prefilling, which fixes the opening of the tool call
-C. A `PostToolUse` hook that repairs arguments after the fact
-D. Strict tool use — `strict: true` on the tool definition — which constrains the arguments Claude passes, validated against the input schema before your code runs
+- **A.** JSON outputs via `output_config.format`, which constrains the final response
+- **B.** Message prefilling, which fixes the opening of the tool call
+- **C.** A `PostToolUse` hook that repairs arguments after the fact
+- **D.** Strict tool use — `strict: true` on the tool definition — which constrains the arguments Claude passes, validated against the input schema before your code runs
 
 ### Q11
 
 A team enables JSON outputs with a schema and removes all their parse-failure handling. What can still break, and what should they check?
 
-A. Nothing can break; a schema guarantees a parseable response
-B. A refusal (`stop_reason: "refusal"`) or a truncation (`stop_reason: "max_tokens"`) still won't parse — check `stop_reason` before assuming the response is valid
-C. Only network failures, which the SDK retries automatically
-D. The schema can be silently ignored on requests that also include tools
+- **A.** Nothing can break; a schema guarantees a parseable response
+- **B.** A refusal (`stop_reason: "refusal"`) or a truncation (`stop_reason: "max_tokens"`) still won't parse — check `stop_reason` before assuming the response is valid
+- **C.** Only network failures, which the SDK retries automatically
+- **D.** The schema can be silently ignored on requests that also include tools
 
 ### Q12
 
 Which pair of costs applies when structured outputs are enabled?
 
-A. A per-request schema-validation fee, and a hard limit of one schema per API key
-B. Doubled output token cost, and incompatibility with streaming
-C. First-request grammar-compile latency with compiled grammars cached for 24 hours from last use, and a slight token-cost rise from the format-describing system prompt the API injects
-D. A required beta header, and loss of tool-use support on the same request
+- **A.** A per-request schema-validation fee, and a hard limit of one schema per API key
+- **B.** Doubled output token cost, and incompatibility with streaming
+- **C.** First-request grammar-compile latency with compiled grammars cached for 24 hours from last use, and a slight token-cost rise from the format-describing system prompt the API injects
+- **D.** A required beta header, and loss of tool-use support on the same request
 
 ---
 
