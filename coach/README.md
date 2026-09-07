@@ -140,3 +140,7 @@ Take the mocks cold and timed. A mock taken with the notes open measures your re
 - The blueprint in [`exam_sections.md`](../exam_sections.md) is Exam Guide v1.0, effective July 2026. Re-check for a version bump before your exam date — if the weights move, the session order and mock distributions should move with them.
 - Where the notes flag a number as "verify at build time" (pricing, context windows, per-tier limits, feature availability), the exam-relevant fact is the mechanism and the tradeoff, not the number. Questions here are written accordingly.
 - These are original practice questions written from the public blueprint and paraphrased course material. They are not reproductions of real exam items, which are confidential.
+
+## Checking the question files
+
+`python3 tools/check_questions.py` verifies every question file in one pass: question and answer-entry counts, answer-letter balance, difficulty spread, per-domain counts against [`mock_exams/blueprint.md`](mock_exams/blueprint.md), that no answer entry is missing its explanation, difficulty, domain, tag, or revise pointer, and that no two stems across the sessions, the mocks, and [`study_practice_questions.md`](../study_practice_questions.md) are near-duplicates. Run it after editing or adding any question — a reworded stem can quietly collide with one three files away.
