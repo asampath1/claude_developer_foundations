@@ -14,6 +14,7 @@ Eight coaching sessions covering every exam domain at its official weight, four 
 | [`sessions/`](sessions/) | Eight coaching sessions, one per domain, in study order |
 | [`mock_exams/blueprint.md`](mock_exams/blueprint.md) | How the mock exams are built, how to score them, and when to take each |
 | [`mock_exams/mock_exam_1.md`](mock_exams/mock_exam_1.md) … [`mock_exam_4.md`](mock_exams/mock_exam_4.md) | Four full 50-question exams, 200 unique questions, no repetition |
+| [`analogies/`](analogies/) | Plain-language walkthroughs of a source chapter through one sustained analogy, for when the mechanisms won't stick from the notes alone |
 
 Source material lives in the repository root — the five domain files, [`exam_sections.md`](../exam_sections.md), and [`study_cheat_sheet.md`](../study_cheat_sheet.md). Everything in this program traces back to those.
 
