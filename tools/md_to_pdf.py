@@ -7,6 +7,7 @@ that every line of source text is present in each PDF's text layer.
     python3 tools/md_to_pdf.py              # render everything into pdf/ and verify
     python3 tools/md_to_pdf.py --no-verify  # render only
     python3 tools/md_to_pdf.py --verify-only
+    python3 tools/md_to_pdf.py --mocks      # the four mock exams into coach/mock_exams/
 
 Requires Google Chrome (or Chromium) on PATH; Markdown is rendered locally with
 markdown-it-py and printed through Chrome's DevTools Protocol.
@@ -53,6 +54,14 @@ DOC_ORDER = [
 
 COMBINED_NAME = "CCDV-F_complete_study_notes.pdf"
 COMBINED_TITLE = "Claude Certified Developer – Foundations (CCDV-F) — Complete Study Notes"
+
+MOCK_DIR = REPO_ROOT / "coach" / "mock_exams"
+MOCK_DOCS = [
+    "mock_exam_1.md",
+    "mock_exam_2.md",
+    "mock_exam_3.md",
+    "mock_exam_4.md",
+]
 
 CHROME_CANDIDATES = [
     "google-chrome",
@@ -576,6 +585,13 @@ def page_count(path: Path) -> int:
 # --------------------------------------------------------------------------- #
 
 
+def discover_mocks() -> list[Path]:
+    missing = [name for name in MOCK_DOCS if not (MOCK_DIR / name).exists()]
+    if missing:
+        raise SystemExit("Missing mock exam(s): " + ", ".join(missing))
+    return [MOCK_DIR / name for name in MOCK_DOCS]
+
+
 def discover_docs() -> list[Path]:
     found = sorted(p for p in REPO_ROOT.glob("*.md") if p.is_file())
     ordered = [REPO_ROOT / name for name in DOC_ORDER if (REPO_ROOT / name).exists()]
@@ -598,19 +614,31 @@ def main() -> int:
     parser.add_argument("--no-verify", action="store_true", help="skip text verification")
     parser.add_argument("--verify-only", action="store_true", help="verify existing PDFs")
     parser.add_argument("--no-combined", action="store_true", help="skip the combined PDF")
+    parser.add_argument(
+        "--mocks",
+        action="store_true",
+        help="render only the four mock exams into coach/mock_exams/",
+    )
     args = parser.parse_args()
 
-    docs = discover_docs()
+    if args.mocks:
+        docs = discover_mocks()
+        out_dir = MOCK_DIR
+        include_combined = False
+    else:
+        docs = discover_docs()
+        out_dir = OUT_DIR
+        include_combined = not args.no_combined
     if not docs:
         print("No Markdown files found.")
         return 1
-    OUT_DIR.mkdir(exist_ok=True)
+    out_dir.mkdir(exist_ok=True)
 
     targets: list[tuple[list[Path], Path]] = [
-        ([doc], OUT_DIR / f"{doc.stem}.pdf") for doc in docs
+        ([doc], out_dir / f"{doc.stem}.pdf") for doc in docs
     ]
-    if not args.no_combined:
-        targets.append((docs, OUT_DIR / COMBINED_NAME))
+    if include_combined:
+        targets.append((docs, out_dir / COMBINED_NAME))
 
     if not args.verify_only:
         md = build_markdown()
