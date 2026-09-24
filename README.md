@@ -28,6 +28,7 @@ Regenerate after editing any note (needs Google Chrome or Chromium on `PATH`):
 ```bash
 pip install -r tools/requirements.txt
 python3 tools/md_to_pdf.py
+python3 tools/md_to_pdf.py --mocks   # coach/mock_exams/mock_exam_1.pdf … mock_exam_4.pdf
 ```
 
 The script renders Markdown locally with markdown-it-py, prints through Chrome's DevTools Protocol, then verifies the result: it extracts the text layer of each PDF and checks every non-blank source line (table cells individually) against it, so a rendering change that silently drops content fails the run instead of shipping.

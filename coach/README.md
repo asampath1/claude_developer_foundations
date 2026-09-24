@@ -13,7 +13,7 @@ Eight coaching sessions covering every exam domain at its official weight, four 
 | [`progress_tracker.md`](progress_tracker.md) | Your score log, weak-areas list, and current difficulty level. The one file you write in. |
 | [`sessions/`](sessions/) | Eight coaching sessions, one per domain, in study order |
 | [`mock_exams/blueprint.md`](mock_exams/blueprint.md) | How the mock exams are built, how to score them, and when to take each |
-| [`mock_exams/mock_exam_1.md`](mock_exams/mock_exam_1.md) … [`mock_exam_4.md`](mock_exams/mock_exam_4.md) | Four full 50-question exams, 200 unique questions, no repetition |
+| [`mock_exams/mock_exam_1.md`](mock_exams/mock_exam_1.md) … [`mock_exam_4.md`](mock_exams/mock_exam_4.md) | Four full 50-question exams, 200 unique questions, no repetition. Printable PDFs sit beside each file (`mock_exam_1.pdf` … `mock_exam_4.pdf`) |
 | [`analogies/`](analogies/) | Plain-language walkthroughs of a source chapter through one sustained analogy, for when the mechanisms won't stick from the notes alone |
 
 Source material lives in the repository root — the five domain files, [`exam_sections.md`](../exam_sections.md), and [`study_cheat_sheet.md`](../study_cheat_sheet.md). Everything in this program traces back to those.
@@ -134,6 +134,8 @@ Tags map to the official skill breakdown in [`exam_sections.md`](../exam_section
 7. **Mock exam 4**, timed and closed-book, as the final rehearsal. Its readiness score is your go/no-go signal.
 
 Take the mocks cold and timed. A mock taken with the notes open measures your reading speed, not your readiness.
+
+Each exam also has a print-ready A4 PDF next to its Markdown file. The answer key and the score sheet each start on a new page. Regenerate them with `python3 tools/md_to_pdf.py --mocks` (same Chrome and Python dependencies as the study-note PDFs).
 
 ## Ground rules
 
